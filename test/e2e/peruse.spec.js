@@ -11,6 +11,8 @@ import {
 
 import { BROWSER_UI, AUTH_UI } from './lib/constants';
 
+jest.unmock('electron')
+
 jasmine.DEFAULT_TIMEOUT_INTERVAL = 25000;
 
 const delay = time => new Promise( resolve => setTimeout( resolve, time ) );
@@ -30,6 +32,10 @@ const app = new Application( {
         IS_SPECTRON: true
     }
 } );
+
+console.log('electron',electron);
+console.log(path.join( __dirname, '..', '..', 'app' ));
+console.log(app);
 
 // TODO: Check that it loads a page from network/mock. Check that it loads images from said page.
 // Check that http images are _not_ loaded.
