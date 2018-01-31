@@ -17,31 +17,17 @@ cache:
   - "$HOME/.electron"
   - "$HOME/.cache"
 addons:
+  chrome: stable
   apt:
     sources:
     - ubuntu-toolchain-r-test
-    - google-chrome
     packages:
     - g++-4.8
     - icnsutils
     - graphicsmagick
     - xz-utils
     - xorriso
-    - google-chrome-stable
-before_script:
-  - export HOMEBREW_CASK_OPTS='--appdir=/Applications'
-  - |
-    if [ "$TRAVIS_OS_NAME" = "osx" ]; then
-      brew update > /dev/null
-      brew cask install google-chrome
-    fi
 
-  - export DISPLAY=:99.0
-  - |
-    if [ "$TRAVIS_OS_NAME" = "linux" ]; then
-      sh -e /etc/init.d/xvfb start
-    fi
-  - sleep 3
 
 script:
 - yarn run build
