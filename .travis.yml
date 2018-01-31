@@ -20,17 +20,18 @@ addons:
   apt:
     sources:
     - ubuntu-toolchain-r-test
+    - google-chrome
     packages:
     - g++-4.8
     - icnsutils
     - graphicsmagick
     - xz-utils
     - xorriso
+    - google-chrome-stable
 before_script:
-- sh -e /etc/init.d/xvfb start &
-- export DISPLAY=:99.0
-- Xvfb &
-- sleep 5
+  - export DISPLAY=:99.0
+  - sh -e /etc/init.d/xvfb start
+  - sleep 3
 
 script:
 - yarn run build
