@@ -21,21 +21,21 @@ addons:
   apt:
     sources:
     - ubuntu-toolchain-r-test
-    - google-chrome
+    # - google-chrome
     packages:
     - g++-4.8
     - icnsutils
     - graphicsmagick
     - xz-utils
     - xorriso
-    - google-chrome-stable
+    # - google-chrome-stable
 
 
 script:
 - yarn run build
 - yarn run test
-- export {no_proxy,NO_PROXY}="127.0.0.1,localhost"
-- sleep 15
+# - export {no_proxy,NO_PROXY}="127.0.0.1,localhost"
+# - sleep 15
 - yarn run test e2e;
 # - if [[ "$NODE_ENV" != "prod" ]]; then yarn run test e2e;
 #   fi
