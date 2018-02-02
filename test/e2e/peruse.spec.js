@@ -44,8 +44,8 @@ describe( 'main window', () =>
 {
     console.log('appppppp>>>>>>>>>>>>>>>>>', app)
     beforeAll( async () =>
-    console.log('before &&& appppppp>>>>>>>>>>>>>>>>>', app)
     {
+        console.log('before &&& appppppp>>>>>>>>>>>>>>>>>', app)
         await delay( 10000 )
         await app.start();
         await app.client.waitUntilWindowLoaded();
