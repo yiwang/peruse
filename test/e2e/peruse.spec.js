@@ -25,13 +25,6 @@ const delay = time => new Promise( resolve => setTimeout( resolve, time ) );
 
 // NOTE: Getting errors in e2e for seemingly no reason? Check you havent enabled devtools in menu.js, this makes spectron
 // have a bad time.
-const app = new Application( {
-    path : electron,
-    args : [path.join( __dirname, '..', '..', 'app' ), 'no-sandbox'],
-    env : {
-        IS_SPECTRON: true
-    }
-} );
 
 // console.log('electron',electron);
 // console.log(path.join( __dirname, '..', '..', 'app' ));
@@ -42,10 +35,17 @@ const app = new Application( {
 
 describe( 'main window', () =>
 {
-    console.log('appppppp>>>>>>>>>>>>>>>>>', app)
+    const app = new Application( {
+        path : electron,
+        args : [path.join( __dirname, '..', '..', 'app' ), 'no-sandbox'],
+        env : {
+            IS_SPECTRON: true
+        }
+    } );
+    console.log('appppppp>>>>>>>>>>>>>>>>>', typeof app)
     beforeAll( async () =>
     {
-        console.log('before &&& appppppp>>>>>>>>>>>>>>>>>', app)
+        console.log('before &&& appppppp>>>>>>>>>>>>>>>>>', typeof app)
         await delay( 10000 )
         await app.start();
         await app.client.waitUntilWindowLoaded();
@@ -63,7 +63,7 @@ describe( 'main window', () =>
 
     it( 'DEBUG LOGGING (amend test): should haven\'t any logs in console of main window', async () =>
     {
-        console.log('DEBUGGGLOGG &&& appppppp>>>>>>>>>>>>>>>>>', app)
+        console.log('DEBUGGGLOGG &&& appppppp>>>>>>>>>>>>>>>>>', typeof app)
         const { client } = app;
         const logs = await client.getRenderProcessLogs();
         // Print renderer process logs
