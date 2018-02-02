@@ -42,7 +42,9 @@ const app = new Application( {
 
 describe( 'main window', () =>
 {
+    console.log('appppppp>>>>>>>>>>>>>>>>>', app)
     beforeAll( async () =>
+    console.log('before &&& appppppp>>>>>>>>>>>>>>>>>', app)
     {
         await delay( 10000 )
         await app.start();
@@ -61,6 +63,7 @@ describe( 'main window', () =>
 
     it( 'DEBUG LOGGING (amend test): should haven\'t any logs in console of main window', async () =>
     {
+        console.log('DEBUGGGLOGG &&& appppppp>>>>>>>>>>>>>>>>>', app)
         const { client } = app;
         const logs = await client.getRenderProcessLogs();
         // Print renderer process logs
