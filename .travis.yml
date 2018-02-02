@@ -2,6 +2,9 @@ sudo: true
 
 language: node_js
 
+env:
+  - NODE_ENV=dev
+
 node_js:
   - 8
   - 7
