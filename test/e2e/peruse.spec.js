@@ -29,7 +29,7 @@ const delay = time => new Promise( resolve => setTimeout( resolve, time ) );
 // TODO: Check that it loads a page from network/mock. Check that it loads images from said page.
 // Check that http images are _not_ loaded.
 
-describe( 'main window', () =>
+describe( 'main window', function spec()
 {
     beforeAll( async () =>
     {
