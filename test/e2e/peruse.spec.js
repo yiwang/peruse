@@ -25,37 +25,35 @@ const delay = time => new Promise( resolve => setTimeout( resolve, time ) );
 
 // NOTE: Getting errors in e2e for seemingly no reason? Check you havent enabled devtools in menu.js, this makes spectron
 // have a bad time.
+const app = new Application( {
+    path : electron,
+    args : [path.join( __dirname, '..', '..', 'app' ), 'no-sandbox'],
+    env : {
+        IS_SPECTRON: true
+    }
+} );
+
+// console.log('electron',electron);
+// console.log(path.join( __dirname, '..', '..', 'app' ));
+// console.log(app);
 
 // TODO: Check that it loads a page from network/mock. Check that it loads images from said page.
 // Check that http images are _not_ loaded.
 
-describe( 'main window', function spec()
+describe( 'main window', () =>
 {
     beforeAll( async () =>
     {
-        this.app = new Application( {
-            path : electron,
-            args : [path.join( __dirname, '..', '..', 'app' )],
-            env : {
-                IS_SPECTRON: true
-            }
-        } );
-
-        console.log('electron',electron);
-        console.log(path.join( __dirname, '..', '..', 'app' ));
-        console.log(this.app);
-
-
         await delay( 10000 )
-        await this.app.start();
-        await this.app.client.waitUntilWindowLoaded();
+        await app.start();
+        await app.client.waitUntilWindowLoaded();
     } );
 
     afterAll( () =>
     {
-        if ( this.app && this.app.isRunning() )
+        if ( app && app.isRunning() )
         {
-            return this.app.stop();
+            return app.stop();
         }
     } );
 
@@ -63,7 +61,7 @@ describe( 'main window', function spec()
 
     it( 'DEBUG LOGGING (amend test): should haven\'t any logs in console of main window', async () =>
     {
-        const { client } = this.app;
+        const { client } = app;
         const logs = await client.getRenderProcessLogs();
         // Print renderer process logs
         logs.forEach( log =>
@@ -78,9 +76,9 @@ describe( 'main window', function spec()
     //
     // it( 'cannot open http:// protocol links', async () =>
     // {
-    //     const { client } = this.app;
-    //     const tabIndex = await newTab( this.app );
-    //     await navigateTo( this.app, 'http://example.com' );
+    //     const { client } = app;
+    //     const tabIndex = await newTab( app );
+    //     await navigateTo( app, 'http://example.com' );
     //     await client.waitForExist( BROWSER_UI.ADDRESS_INPUT );
     //
     //     // const address = await client.getValue( BROWSER_UI.ADDRESS_INPUT );
@@ -97,9 +95,9 @@ describe( 'main window', function spec()
 
     test( 'has safe:// protocol', async () =>
     {
-        const { client } = this.app;
-        const tabIndex = await newTab( this.app );
-        await navigateTo( this.app, 'example.com' );
+        const { client } = app;
+        const tabIndex = await newTab( app );
+        await navigateTo( app, 'example.com' );
         await client.waitForExist( BROWSER_UI.ADDRESS_INPUT );
         await client.pause( 1500 );
 
@@ -118,9 +116,9 @@ describe( 'main window', function spec()
 
     it( 'has safe-auth:// protocol', async () =>
     {
-        const { client } = this.app;
-        const tabIndex = await newTab( this.app );
-        await navigateTo( this.app, 'safe-auth://example.com' );
+        const { client } = app;
+        const tabIndex = await newTab( app );
+        await navigateTo( app, 'safe-auth://example.com' );
         await client.waitForExist( BROWSER_UI.ADDRESS_INPUT );
         const address = await client.getValue( BROWSER_UI.ADDRESS_INPUT );
 
@@ -135,9 +133,9 @@ describe( 'main window', function spec()
 
     it( 'loads safe-auth:// home', async () =>
     {
-        const { client } = this.app;
-        const tabIndex = await newTab( this.app );
-        await navigateTo( this.app, 'safe-auth://home' );
+        const { client } = app;
+        const tabIndex = await newTab( app );
+        await navigateTo( app, 'safe-auth://home' );
         await client.waitForExist( BROWSER_UI.ADDRESS_INPUT );
         const address = await client.getValue( BROWSER_UI.ADDRESS_INPUT );
 
@@ -156,9 +154,9 @@ describe( 'main window', function spec()
     // TODO: We should setup test sites for all network instances to test net config e2e.
     // it( 'can navigate to a safe:// site', async () =>
     // {
-    //     const { client } = this.app;
-    //     const tabIndex = await newTab( this.app );
-    //     await navigateTo( this.app, 'aaa.b' );
+    //     const { client } = app;
+    //     const tabIndex = await newTab( app );
+    //     await navigateTo( app, 'aaa.b' );
     //     await client.waitForExist( BROWSER_UI.ADDRESS_INPUT );
     //     const address = await client.getValue( BROWSER_UI.ADDRESS_INPUT );
     //
@@ -172,9 +170,9 @@ describe( 'main window', function spec()
 
     it( 'can open a new tab + set address', async () =>
     {
-        const { client } = this.app;
-        const tabIndex = await newTab( this.app );
-        await navigateTo( this.app, 'example.com' );
+        const { client } = app;
+        const tabIndex = await newTab( app );
+        await navigateTo( app, 'example.com' );
         await client.waitForExist( BROWSER_UI.ADDRESS_INPUT );
 
 
@@ -195,11 +193,11 @@ describe( 'main window', function spec()
 
     xit( 'can go backwards', async () =>
     {
-        const { client } = this.app;
-        await setToShellWindow(this.app);
-        const tabIndex = await newTab( this.app );
-        await navigateTo( this.app, 'example.com' );
-        await navigateTo( this.app, 'google.com' );
+        const { client } = app;
+        await setToShellWindow(app);
+        const tabIndex = await newTab( app );
+        await navigateTo( app, 'example.com' );
+        await navigateTo( app, 'google.com' );
 
         await client.waitForExist( BROWSER_UI.BACKWARDS );
         await client.click( BROWSER_UI.BACKWARDS );
@@ -214,11 +212,11 @@ describe( 'main window', function spec()
 
     xit( 'can go forwards', async () =>
     {
-        const { client } = this.app;
-        await setToShellWindow(this.app);
-        const tabIndex = await newTab( this.app );
-        await navigateTo( this.app, 'example.com' );
-        await navigateTo( this.app, 'example.org' );
+        const { client } = app;
+        await setToShellWindow(app);
+        const tabIndex = await newTab( app );
+        await navigateTo( app, 'example.com' );
+        await navigateTo( app, 'example.org' );
 
         await client.waitForExist( BROWSER_UI.BACKWARDS );
         await client.click( BROWSER_UI.BACKWARDS );
@@ -229,7 +227,7 @@ describe( 'main window', function spec()
         //TODO: URL from webview always has trailing slash
         expect( clientUrl ).toBe( 'http://example.com' );
 
-        await setToShellWindow(this.app);
+        await setToShellWindow(app);
         await client.pause( 500 ); // need to wait a sec for the UI to catch up
         await client.waitForExist( BROWSER_UI.FORWARDS );
 
@@ -246,11 +244,11 @@ describe( 'main window', function spec()
 
     it( 'can close a tab', async() =>
     {
-        const { client } = this.app;
-        await setToShellWindow(this.app);
-        const tabIndex = await newTab( this.app );
+        const { client } = app;
+        await setToShellWindow(app);
+        const tabIndex = await newTab( app );
 
-        await navigateTo( this.app, 'bbc.com' );
+        await navigateTo( app, 'bbc.com' );
         await client.waitForExist( BROWSER_UI.CLOSE_TAB );
 
         await client.click( `${BROWSER_UI.ACTIVE_TAB} ${BROWSER_UI.CLOSE_TAB}` );
@@ -265,8 +263,8 @@ describe( 'main window', function spec()
 
     xtest( 'closes the window', async() =>
     {
-        const { client } = this.app;
-        await setToShellWindow(this.app);
+        const { client } = app;
+        await setToShellWindow(app);
         await client.waitForExist( BROWSER_UI.ADDRESS_INPUT );
         await client.pause( 500 ); // need to wait a sec for the UI to catch up
         await client.click( BROWSER_UI.ADDRESS_INPUT );
