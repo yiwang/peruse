@@ -38,6 +38,7 @@ before_script:
   - sleep 3
 
 script:
+  - ls -la node_modules | grep chrome
   - node --version
   # - yarn lint
   # - yarn build
