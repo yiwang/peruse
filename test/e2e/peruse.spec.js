@@ -1,5 +1,5 @@
 import { Application } from 'spectron';
-import electronPath from 'electron';
+import electron from 'electron';
 import path from 'path';
 
 jasmine.DEFAULT_TIMEOUT_INTERVAL = 15000;
@@ -11,7 +11,7 @@ describe( 'main window', function spec()
     beforeAll( async () =>
     {
         this.app = new Application( {
-            path : electronPath,
+            path : electron,
             args : [path.join( __dirname, '..', '..', 'app' )],
         } );
 
