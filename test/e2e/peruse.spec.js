@@ -3,6 +3,7 @@ import electron from 'electron';
 import path from 'path';
 
 jasmine.DEFAULT_TIMEOUT_INTERVAL = 15000;
+jest.unmock('electron')
 
 const delay = time => new Promise( resolve => setTimeout( resolve, time ) );
 
