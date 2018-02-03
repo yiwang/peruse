@@ -42,12 +42,12 @@ describe( 'main window', () =>
             IS_SPECTRON: true
         }
     } );
-    console.log('appppppp>>>>>>>>>>>>>>>>>', typeof app)
+    // console.log('appppppp>>>>>>>>>>>>>>>>>', app)
     beforeAll( async () =>
     {
-        console.log('before &&& appppppp>>>>>>>>>>>>>>>>>', typeof app)
         await delay( 10000 )
         await app.start();
+        console.log('before &&& appppppp>>>>>>>>>>>>>>>>>', app.client)
         await app.client.waitUntilWindowLoaded();
     } );
 
@@ -63,7 +63,7 @@ describe( 'main window', () =>
 
     it( 'DEBUG LOGGING (amend test): should haven\'t any logs in console of main window', async () =>
     {
-        console.log('DEBUGGGLOGG &&& appppppp>>>>>>>>>>>>>>>>>', typeof app)
+        console.log('DEBUGGGLOGG &&& appppppp>>>>>>>>>>>>>>>>>', app.client)
         const { client } = app;
         const logs = await client.getRenderProcessLogs();
         // Print renderer process logs
