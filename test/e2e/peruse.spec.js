@@ -9,6 +9,7 @@ import {
     setToShellWindow
 } from './lib/browser-driver';
 
+// but this goes??
 import { BROWSER_UI, AUTH_UI } from './lib/constants';
 
 jest.unmock('electron')
