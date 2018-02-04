@@ -44,9 +44,13 @@ describe( 'main window', () =>
 {
     beforeAll( async () =>
     {
-        await delay( 10000 )
         await app.start();
         await app.client.waitUntilWindowLoaded();
+        await delay( 10000 );
+
+        console.log('appppppp', typeof app)
+        console.log('appppppp', app.client)
+        console.log('appppppp', app.browserWindow)
     } );
 
     afterAll( () =>
@@ -61,6 +65,8 @@ describe( 'main window', () =>
 
     it( 'DEBUG LOGGING (amend test): should haven\'t any logs in console of main window', async () =>
     {
+        console.log('app in test', typeof app)
+        console.log('app in test', app.client)
         const { client } = app;
         const logs = await client.getRenderProcessLogs();
         // Print renderer process logs
