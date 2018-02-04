@@ -41,8 +41,8 @@ test_script:
   - yarn run build
   - yarn run test
   # -
-  - if [%NODE_ENV%]==[dev] echo WOOOOOOOOOO%NODE_ENV%
-  - if [%NODE_ENV%]==[dev] yarn run test e2e
+  - if %NODE_ENV% EQU dev echo WOOOOOOOOOO %NODE_ENV%
+  - if %NODE_ENV% EQU dev yarn run test e2e
 
 
 
