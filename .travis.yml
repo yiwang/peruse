@@ -36,7 +36,7 @@ before_script:
 script:
 - yarn run build
 # - yarn run test
-- export {no_proxy,NO_PROXY}="127.0.0.1,localhost"
+# - export {no_proxy,NO_PROXY}="127.0.0.1,localhost"
 - sleep 5
 - yarn run test e2e;
 # - if [[ "$NODE_ENV" != "prod" ]]; then yarn run test e2e;
