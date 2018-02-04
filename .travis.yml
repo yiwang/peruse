@@ -4,7 +4,7 @@ os:
 - osx
 - linux
 env:
-# - NODE_ENV=dev
+- NODE_ENV=dev
 - NODE_ENV=prod
 language: node_js
 node_js:
@@ -34,9 +34,9 @@ script:
 - yarn run test
 - export {no_proxy,NO_PROXY}="127.0.0.1,localhost"
 - sleep 15
-- yarn run test e2e;
-# - if [[ "$NODE_ENV" != "prod" ]]; then yarn run test e2e;
-#   fi
+# - yarn run test e2e;
+- if [[ "$NODE_ENV" != "prod" ]]; then yarn run test e2e;
+  fi
 - yarn run package
 - yarn run post-pack
 
