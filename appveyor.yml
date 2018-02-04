@@ -40,10 +40,10 @@ test_script:
   # - yarn run lint
   - yarn run build
   - yarn run test
-  - ps: >-
-    If ($env:NODE_ENV -Match "dev") {
-      yarn run test e2e
-    }
+  # -
+  - if [%NODE_ENV%]==[dev] (
+    yarn run test e2e )
+
 
 
 build_script:
