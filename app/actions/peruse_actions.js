@@ -8,11 +8,12 @@ export const TYPES = {
 
     //read status from network
     RECEIVED_CONFIG : 'RECEIVED_CONFIG',
+    RECEIVED_AUTH_RESPONSE : 'RECEIVED_AUTH_RESPONSE',
 
     SET_INITIALIZER_TASK        : 'SET_INITIALIZER_TASK',
     STORE_NEW_ACCOUNT           : 'STORE_NEW_ACCOUNT',
     RECONNECT_SAFE_APP          : 'RECONNECT_SAFE_APP',
-    SAFE_NETWORK_STATUS_CHANGED : 'SAFE_NETWORK_STATUS_CHANGED',
+    PERUSE_APP_STATUS_CHANGED : 'PERUSE_APP_STATUS_CHANGED',
 
     RESET_STORE : 'RESET_STORE'
 };
@@ -24,10 +25,11 @@ export const {
     authorisedApp,
 
     receivedConfig,
+    receivedAuthResponse,
 
     setInitializerTask,
     storeNewAccount,
-    safeNetworkStatusChanged,
+    peruseAppStatusChanged,
     reconnectSafeApp,
 
     resetStore
@@ -38,10 +40,11 @@ export const {
     TYPES.AUTHORISED_APP,
 
     TYPES.RECEIVED_CONFIG,
+    TYPES.RECEIVED_AUTH_RESPONSE,
 
     TYPES.SET_INITIALIZER_TASK,
     TYPES.STORE_NEW_ACCOUNT,
-    TYPES.SAFE_NETWORK_STATUS_CHANGED,
+    TYPES.PERUSE_APP_STATUS_CHANGED,
     TYPES.RECONNECT_SAFE_APP,
 
     TYPES.RESET_STORE

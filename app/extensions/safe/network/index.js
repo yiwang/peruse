@@ -1,19 +1,20 @@
-import { app, ipcMain } from 'electron';
 import { initializeApp, fromAuthURI } from '@maidsafe/safe-node-app';
 import { APP_INFO, CONFIG, SAFE, PROTOCOLS } from 'appConstants';
 import logger from 'logger';
 import { parse as parseURL } from 'url';
-// import { executeScriptInBackground } from 'utils/background-process';
 import { addNotification, clearNotification } from 'actions/notification_actions';
-import * as safeActions from 'actions/safe_actions';
+import * as peruseAppActions from 'actions/peruse_actions';
 import { callIPC } from '../ffi/ipc';
+import ipc from '../ffi/ipc';
 import AUTH_CONSTANTS from '../auth-constants';
 
 const queue = [];
 let appObj;
 let store;
-let browserReqUri;
+let peruseRequestUri;
 let browserAuthReqUri;
+
+ipc();
 
 export const authFromQueue = async () =>
 {
@@ -23,8 +24,10 @@ export const authFromQueue = async () =>
     }
 };
 
+
 const authFromRes = async ( res, isAuthenticated ) =>
 {
+    //TODO: This logic shuld be in BG process for peruse.
     try
     {
         appObj = await appObj.auth.loginFromURI( res );
@@ -33,8 +36,8 @@ const authFromRes = async ( res, isAuthenticated ) =>
         {
             // TODO: AuthorisedApp should be localscope?
             // this appObj cant be used, so maybe there's no need to bother here?
-            store.dispatch( safeActions.authorisedApp( appObj ) );
-            store.dispatch( safeActions.setAuthAppStatus( SAFE.APP_STATUS.AUTHORISED ) );
+            store.dispatch( peruseAppActions.authorisedApp( appObj ) );
+            store.dispatch( peruseAppActions.setAuthAppStatus( SAFE.APP_STATUS.AUTHORISED ) );
         }
     }
     catch ( err )
@@ -96,7 +99,7 @@ export const initAnon = async ( passedStore ) =>
 
         const authType = parseSafeAuthUrl( authReq.uri );
 
-        global.browserReqUri = authReq.uri;
+        global.peruseRequestUri = authReq.uri;
 
         if ( authType.action === 'auth' )
         {
@@ -112,15 +115,13 @@ export const initAnon = async ( passedStore ) =>
     }
 };
 
-export const handleConnResponse = ( url, isAuthenticated ) => authFromRes( url, isAuthenticated );
-
-
-export const handleOpenUrl = async ( res ) =>
+export const handleSafeAuthUrlReception = async ( res ) =>
 {
     if ( typeof res !== 'string' )
     {
         throw new Error( 'Response url should be a string' );
     }
+
     let authUrl = null;
     logger.info( 'Received URL response' );
 
@@ -128,7 +129,6 @@ export const handleOpenUrl = async ( res ) =>
     {
         authUrl = parseSafeAuthUrl( res );
 
-        // Q: Do we need this check?
         if ( authUrl.action === 'auth' )
         {
             return handleSafeAuthAuthentication( res );
@@ -181,7 +181,7 @@ export const requestAuth = async () =>
 
         global.browserAuthReqUri = authReq.uri;
 
-        handleOpenUrl( authReq.uri );
+        handleSafeAuthUrlReception( authReq.uri );
         return appObj;
     }
     catch ( err )
@@ -225,9 +225,3 @@ export const initMock = async ( passedStore ) =>
         throw err;
     }
 };
-
-
-ipcMain.on( 'browserAuthenticated', ( e, uri, isAuthenticated ) =>
-{
-    authFromRes( uri, isAuthenticated );
-} );

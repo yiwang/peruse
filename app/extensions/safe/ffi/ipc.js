@@ -5,7 +5,6 @@ import i18n from 'i18n';
 import authenticator from './authenticator';
 import CONSTANTS from '../auth-constants';
 import config from '../config';
-import { handleConnResponse } from '../network';
 import logger from 'logger';
 
 config.i18n();
@@ -103,14 +102,7 @@ class ReqQueue
                 ipcEvent.sender.send( self.resChannelName, self.req );
             }
 
-            if ( this.req.uri === global.browserReqUri )
-            {
-                handleConnResponse( parseResUrl( res ) );
-            }
-            else
-            {
-                openExternal( res );
-            }
+            openExternal( res );
 
             self.next();
             return;

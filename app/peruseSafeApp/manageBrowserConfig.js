@@ -5,12 +5,12 @@ import {
     setAuthAppStatus,
     setSaveConfigStatus,
     setReadConfigStatus
-} from 'actions/safe_actions';
+} from 'actions/peruse_actions';
 import { addNotification } from 'actions/notification_actions';
 import { CONFIG, SAFE, SAFE_APP_ERROR_CODES } from 'appConstants';
 
 /**
- * Parses the browser state to json (removes safeNetwork) and saves to an MD on the app Homecontainer,
+ * Parses the browser state to json (removes peruseApp) and saves to an MD on the app Homecontainer,
  * encrypting as it goes.
  * @param  { Object } state App state
  * @param  { Bool } quit  to quit or not to quit...
@@ -20,7 +20,7 @@ export const saveConfigToSafe = ( store, quit ) =>
 {
     const state = store.getState();
 
-    const stateToSave = { ...state, safeNetwork: {} };
+    const stateToSave = { ...state, peruseApp: {} };
     const JSONToSave = JSON.stringify( stateToSave );
 
     return new Promise( async ( resolve, reject ) =>
@@ -160,7 +160,7 @@ export const readConfigFromSafe = ( store ) =>
                 const state = store.getState();
 
                 //only error if we're only reading
-                if( state.safeNetwork.saveStatus !== SAFE.SAVE_STATUS.TO_SAVE )
+                if( state.peruseApp.saveStatus !== SAFE.SAVE_STATUS.TO_SAVE )
                 {
                     store.dispatch( addNotification( {
                         text: 'No browser data found on the network.',
