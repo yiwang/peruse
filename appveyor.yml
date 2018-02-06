@@ -43,7 +43,7 @@ test_script:
   - yarn run build
   - yarn run test
   # -
-  - if [%RUN_E2E%]==[true] (
+  - if [%RUN_E2E%] (
     yarn run test e2e )
 
 
