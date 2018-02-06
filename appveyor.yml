@@ -26,6 +26,8 @@ clone_depth: 1
 install:
   - ps: Install-Product node $env:nodejs_version x64
   - set CI=true
+  - if [%NODE_ENV%]==[dev] ( set RUN_E2E=true )
+
   # - npm install -g npm@latest
   - set PATH=%APPDATA%\npm;%PATH%
   - node --version
@@ -41,8 +43,7 @@ test_script:
   - yarn run build
   - yarn run test
   # -
-  - if [%NODE_ENV%]==[dev] (ECHO "WOOOOOOOOOO %NODE_ENV%")
-  - if [%NODE_ENV%]==[dev] (
+  - if [%RUN_E2E%]==[true] (
     yarn run test e2e )
 
 
