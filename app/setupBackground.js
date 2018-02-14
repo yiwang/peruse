@@ -16,16 +16,16 @@ import path from 'path';
 import { isRunningUnpacked, isRunningDevelopment, isRunningPackaged, PROTOCOLS } from 'appConstants';
 // import { parse as parseURL } from 'url';
 // import pkg from 'appPackage';
-// import { configureStore } from './store/configureStore';
+import { configureStore } from './store/configureStore';
 
-// const initialState = {};
+const initialState = {};
 let backgroundProcess = null;
 
 const BACKGROUND_PROCESS = path.join( __dirname, 'bg.html' );
 
 // Add middleware from extensions here.
-// const loadMiddlewarePackages = [];
-// const store = configureStore( initialState, loadMiddlewarePackages );
+const loadMiddlewarePackages = [];
+const store = configureStore( initialState, loadMiddlewarePackages, true );
 
 // const mainWindow = null;
 
@@ -43,7 +43,7 @@ const setupBackground = () =>
             // show           : isRunningUnpacked,
             width: 300,
             height: 450,
-            show: false,
+            show: true,
             frame: false,
             fullscreenable: false,
             resizable: false,
