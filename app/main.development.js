@@ -156,10 +156,10 @@ app.on( 'ready', async () =>
 
     handleCommands( store );
 
-    createTray();
-    createSafeInfoWindow();
+    // createTray();
+    // createSafeInfoWindow();
 
-    // bgProcessWindow = setupBackground();
+    bgProcessWindow = setupBackground();
 } );
 
 app.on( 'open-url', ( e, url ) =>

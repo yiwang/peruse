@@ -1,4 +1,4 @@
-import { app } from 'electron';
+// import { app } from 'electron';
 import { initializeApp, fromAuthURI } from '@maidsafe/safe-node-app';
 import { APP_INFO, CONFIG, SAFE, PROTOCOLS } from 'appConstants';
 import logger from 'logger';

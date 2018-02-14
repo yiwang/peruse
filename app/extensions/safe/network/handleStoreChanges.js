@@ -2,9 +2,9 @@ import { SAFE } from 'appConstants';
 import {
     saveConfigToSafe,
     readConfigFromSafe
-} from './network/manageBrowserConfig';
+} from './manageBrowserConfig';
 
-import { requestAuth, clearAppObj } from './network';
+import { requestAuth, clearAppObj } from '../network';
 import * as safeActions from 'actions/safe_actions';
 import * as notificationActions from 'actions/notification_actions';
 import logger from 'logger';
@@ -20,10 +20,21 @@ const authingStates = [
  * Setup actions to be triggered in response to store state changes.
  * @param  { ReduxStore } store [description]
  */
-const handleStoreChanges = ( store ) =>
+export const handlePeruseStoreChanges = ( store ) =>
 {
     manageSaveStateActions( store );
     manageReadStateActions( store );
+    // manageAuthorisationActions( store );
+    // manageLogout( store );
+}
+/**
+ * Setup actions to be triggered in response to store state changes.
+ * @param  { ReduxStore } store [description]
+ */
+export const handleMainStoreChanges = ( store ) =>
+{
+    // manageSaveStateActions( store );
+    // manageReadStateActions( store );
     manageAuthorisationActions( store );
     manageLogout( store );
 }
@@ -170,8 +181,10 @@ const manageSaveStateActions = async ( store ) =>
     const state = store.getState();
     const safeNetwork = state.safeNetwork;
 
+    logger.info('MANAGING SAVE STATE')
     if ( safeNetwork.saveStatus !== SAFE.SAVE_STATUS.TO_SAVE )
     {
+        logger.info('NOT SET TO SAVE STATE')
         // do nothing
         return;
     }
@@ -179,6 +192,7 @@ const manageSaveStateActions = async ( store ) =>
     if ( networkIsConnected( state ) && safeNetwork.readStatus !== SAFE.READ_STATUS.READ_SUCCESSFULLY &&
         safeNetwork.readStatus !== SAFE.READ_STATUS.READ_BUT_NONEXISTANT )
     {
+        logger.info('NOT SET TO SAVE STATE')
         if ( safeNetwork.readStatus !== SAFE.READ_STATUS.TO_READ &&
             safeNetwork.readStatus !== SAFE.READ_STATUS.READING )
         {
@@ -239,4 +253,4 @@ const manageSaveStateActions = async ( store ) =>
 
 
 
-export default handleStoreChanges;
+// export default handleMainStoreChanges;

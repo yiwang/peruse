@@ -18,6 +18,8 @@ class LibLoader {
   constructor() {
     this[_mods] = [authenticator];
     this[_libPath] = CONSTANTS.LIB_PATH.SAFE_AUTH[os.platform()];
+
+    console.log('SETTING SAFE LIBBBBBBBB', this[_libPath]);
   }
 
   load() {

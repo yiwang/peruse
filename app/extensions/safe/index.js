@@ -12,7 +12,7 @@ import { initAnon, initMock } from './network';
 import * as authAPI from './auth-api';
 
 import blockNonSAFERequests from './blockNonSafeReqs';
-import handleStoreChanges from './handleStoreChanges';
+import {handleMainStoreChanges} from './network/handleStoreChanges';
 
 
 const init = async ( store ) =>
@@ -21,6 +21,8 @@ const init = async ( store ) =>
     registerSafeProtocol();
     registerSafeAuthProtocol();
 
+
+    //TODO: Curerntly this is duplicated in BG and netowrk....
     try
     {
         // setup auth
@@ -49,7 +51,7 @@ const init = async ( store ) =>
 
     store.subscribe( async () =>
     {
-        handleStoreChanges( store );
+        handleMainStoreChanges( store );
     } );
 };
 

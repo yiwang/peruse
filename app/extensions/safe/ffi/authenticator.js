@@ -9,6 +9,7 @@ import ref from 'ref';
 import crypto from 'crypto';
 import lodash from 'lodash';
 import i18n from 'i18n';
+import logger from 'logger';
 
 import SafeLib from './safe_lib';
 import Listener from './listeners';
@@ -55,6 +56,8 @@ class Authenticator extends SafeLib
     constructor()
     {
         super();
+
+        logger.info('constructing authhhh')
 
         config.i18n();
         this[_registeredClientHandle] = null;
@@ -881,6 +884,7 @@ class Authenticator extends SafeLib
 
         try
         {
+            logger.info('decodinngggg')
             this.safeLib.auth_unregistered_decode_ipc_msg(
                 types.allocCString( parsedUri ),
                 types.Null,
