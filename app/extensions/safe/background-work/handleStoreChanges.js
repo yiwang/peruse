@@ -2,9 +2,9 @@ import { SAFE } from 'appConstants';
 import {
     saveConfigToSafe,
     readConfigFromSafe
-} from './network/manageBrowserConfig';
+} from './manageBrowserConfig';
 
-import { requestAuth, clearAppObj } from './network';
+import { requestAuth, clearAppObj } from '../network';
 import * as safeActions from 'actions/safe_actions';
 import * as notificationActions from 'actions/notification_actions';
 import logger from 'logger';
@@ -22,10 +22,10 @@ const authingStates = [
  */
 const handleStoreChanges = ( store ) =>
 {
-    manageSaveStateActions( store );
-    manageReadStateActions( store );
-    manageAuthorisationActions( store );
-    manageLogout( store );
+    // manageSaveStateActions( store );
+    // manageReadStateActions( store );
+    // manageAuthorisationActions( store );
+    // manageLogout( store );
 }
 
 const networkIsConnected = ( state ) =>

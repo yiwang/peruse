@@ -18,17 +18,16 @@ import { isRunningUnpacked, isRunningDevelopment, isRunningPackaged, PROTOCOLS }
 // import pkg from 'appPackage';
 import { configureStore } from './store/configureStore';
 
-const initialState = {};
+// const initialState = {};
 let backgroundProcess = null;
 
 const BACKGROUND_PROCESS = path.join( __dirname, 'bg.html' );
 
 // Add middleware from extensions here.
-const loadMiddlewarePackages = [];
-const store = configureStore( initialState, loadMiddlewarePackages, true );
+// const loadMiddlewarePackages = [];
+// const store = configureStore( initialState, loadMiddlewarePackages, true );
 
 // const mainWindow = null;
-
 
 
 const setupBackground = () =>

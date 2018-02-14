@@ -16,7 +16,14 @@ import logger from 'logger';
 // import { parse as parseURL } from 'url';
 // import pkg from 'appPackage';
 
+import * as authAPI from 'extensions/safe/auth-api';
+import ipc from 'extensions/safe/ffi/ipc';
+
 import { configureStore } from 'store/configureStore';
+import { initAnon, initMock } from 'extensions/safe/network';
+
+// TODO This handling needs to be imported via extension apis more seemlessly
+// import handleStoreChanges from 'extensions/safe/background-work/handleStoreChanges';
 
 // const { Menu, Tray } = remote;
 // const app = remote.require('app');
@@ -27,7 +34,44 @@ const loadMiddlewarePackages = [];
 const store = configureStore( initialState, loadMiddlewarePackages );
 
 
-logger.info('BG PROCESSSS PAGGE LOADEDED', store.getState());
+// const init = async () =>
+// {
+//     logger.info('initttttttttttttttttttttttttt')
+//
+//     try
+//     {
+//         // setup auth
+//         authAPI.ffi.ffiLoader.loadLibrary();
+//
+//         // dont do this inside if auth ffi as circular dep
+//         ipc();
+//
+//         if ( isRunningProduction )
+//         {
+//             await initAnon( store );
+//         }
+//         else
+//         {
+//             await initMock( store );
+//         }
+//     }
+//     catch ( e )
+//     {
+//         logger.info( 'Problems initing SAFE extension' );
+//         logger.info( e.message );
+//         logger.info( e );
+//     }
+// }
+
+store.subscribe( async () =>
+{
+    logger.info('STORE UPDATED IN BG PROCESSSSS')
+    // logger.info('STORE UPDATED IN BG PROCESSSSS', handleStoreChanges)
+    // handleStoreChanges( store );
+} );
+
+// init();
+logger.info('xxxxxxxxxxxxxxxxxxxxxxxxxxBG PROCESSSS PAGGE LOADEDED', store.getState());
 
 
 // let tray = null;
