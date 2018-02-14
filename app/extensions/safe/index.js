@@ -4,7 +4,7 @@ import setupRoutes from './server-routes';
 import registerSafeProtocol from './protocols/safe';
 
 import registerSafeAuthProtocol from './protocols/safe-auth';
-import ipc from './ffi/ipc';
+// import ipc from './ffi/ipc';
 
 import { initAnon, initMock } from './network';
 // import * as tabsActions from 'actions/tabs_actions';
@@ -12,7 +12,7 @@ import { initAnon, initMock } from './network';
 import * as authAPI from './auth-api';
 
 import blockNonSAFERequests from './blockNonSafeReqs';
-import handleStoreChanges from './handleStoreChanges';
+import handleMainStoreChanges from './network/handleStoreChanges';
 
 
 const init = async ( store ) =>
@@ -21,13 +21,15 @@ const init = async ( store ) =>
     registerSafeProtocol();
     registerSafeAuthProtocol();
 
+
+    //TODO: Curerntly this is duplicated in BG and netowrk....
     try
     {
         // setup auth
         authAPI.ffi.ffiLoader.loadLibrary();
 
         // dont do this inside if auth ffi as circular dep
-        ipc();
+        // ipc();
 
         if ( isRunningProduction )
         {
@@ -49,7 +51,7 @@ const init = async ( store ) =>
 
     store.subscribe( async () =>
     {
-        handleStoreChanges( store );
+        handleMainStoreChanges( store );
     } );
 };
 

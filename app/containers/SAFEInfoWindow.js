@@ -7,7 +7,7 @@ import * as NotificationActions from 'actions/notification_actions';
 import * as UiActions from 'actions/ui_actions';
 import * as AuthenticatorActions from 'actions/authenticator_actions';
 // import * as BookmarksActions from 'actions/bookmarks_actions';
-// import * as SafeActions from 'actions/safe_actions';
+// import * as SafeActions from 'actions/peruse_actions';
 import { SAFE } from 'appConstants';
 import { TextInput } from 'nessie-ui';
 import Notifier from 'components/Notifier';
@@ -36,10 +36,10 @@ class SAFEInfoWindow extends Component
 
     render()
     {
-        const { safeNetwork, clearNotification, notifications } = this.props;
+        const { peruseApp, clearNotification, notifications } = this.props;
         const notification = notifications[0];
 
-        const loggedIn = safeNetwork.appStatus === SAFE.NETWORK_STATE.LOGGED_IN;
+        const loggedIn = peruseApp.appStatus === SAFE.NETWORK_STATE.LOGGED_IN;
 
         return (
             <div>
@@ -84,7 +84,7 @@ function mapStateToProps( state )
         notifications : state.notifications,
         // tabs          : state.tabs,
         ui            : state.ui,
-        safeNetwork            : state.safeNetwork,
+        peruseApp            : state.peruseApp,
     };
 }
 

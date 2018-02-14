@@ -6,6 +6,7 @@ import { env,
     isRunningProduction,
     isRunningDevelopment,
     isRunningSpectronTest,
+    inMainProcess,
     inRendererProcess
 } from 'appConstants';
 
@@ -36,7 +37,7 @@ if( log.transports )
 }
 
 // HACK: for jest
-if( log.info && log.verbose )
+if( log.info && log.verbose && inMainProcess )
 {
     // TODO: add buld ID if prod. Incase you're opening up, NOT THIS BUILD.
     log.info( '>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>' );

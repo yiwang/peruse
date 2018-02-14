@@ -15,6 +15,7 @@ import logger from 'logger';
 import { isRunningUnpacked, isRunningPackaged, PROTOCOLS } from 'appConstants';
 import { parse as parseURL } from 'url';
 import pkg from 'appPackage';
+import * as peruseAppActions from 'actions/peruse_actions';
 
 import setupBackground from './setupBackground';
 
@@ -28,7 +29,7 @@ import handleCommands from './commandHandling';
 import { setupWebAPIs } from './webAPIs';
 
 // TODO: This should be handled in an extensible fashion
-import { handleOpenUrl } from './extensions/safe/network';
+import { handleSafeAuthUrlReception } from './extensions/safe/network';
 import { addTab, closeActiveTab } from 'actions/tabs_actions';
 import { setupServerVars, startServer } from './server';
 
@@ -43,7 +44,6 @@ const loadMiddlewarePackages = [];
 const store = configureStore( initialState, loadMiddlewarePackages );
 
 
-
 global.mainProcessStore = store;
 // renderer error notifications
 ipcMain.on( 'errorInWindow', ( event, data ) =>
@@ -53,19 +53,45 @@ ipcMain.on( 'errorInWindow', ( event, data ) =>
 
 const mainWindow = null;
 
+
 const handleSafeUrls = ( url ) =>
 {
-    // TODO. Queue incase of not started.
-    handleOpenUrl( url );
-
+    // added as from renderer it's receiving as a lowercase string. WHY?
     const parsedUrl = parseURL( url );
 
-    // TODO: Use constants // 'shouldOpenUrl...'
-    if ( parsedUrl.protocol === 'safe:' )
+    // const urlForSafeParsing = { ...parsedUrl };
+
+    // logger.info('THE URLLLLLLL', url, urlForSafeParsing);
+    // urlForSafeParsing.host = parsedUrl.host.toUpperCase();
+
+    // let parsableURL = url.toUpperCase();
+    // TODO. Queue incase of not started.
+    logger.verbose( 'Receiving Open Window Param (a url)', url );
+
+    // If the received URL protocol is looong and starts with 'safe' it's fair to assume it's the
+    // auth response
+    // Currently _ONLY_ peruse is going to be making a req.fe
+    // When we have more... What then? Are we able to retrieve the url schemes registered for a given app?
+
+    if ( parsedUrl.protocol === 'safe-auth:' )
     {
+        logger.info('AUTH URL RECEIVIEDD', url)
+        handleSafeAuthUrlReception( url );
+        // store.dispatch( addTab( { url, isActiveTab: true } ) );
+    }
+    else if ( parsedUrl.protocol === 'safe:' )
+    {
+        logger.info('SAFE URL RECEIVIEDD', url)
         store.dispatch( addTab( { url, isActiveTab: true } ) );
     }
+    // 20 is arbitrary right now.... LONG.
+    else if ( parsedUrl.protocol.startsWith( 'safe-' ) && parsedUrl.protocol.length > 20 )
+    {
+        logger.info('RECEIVED RESPNSE AND PASSING IT ON')
+        store.dispatch( peruseAppActions.receivedAuthResponse( url ) );
+    }
 };
+
 
 // Register all schemes from package.json
 protocol.registerStandardSchemes( pkg.build.protocols.schemes, { secure: true } );
@@ -156,10 +182,10 @@ app.on( 'ready', async () =>
 
     handleCommands( store );
 
-    createTray();
-    createSafeInfoWindow();
+    // createTray();
+    // createSafeInfoWindow();
 
-    // bgProcessWindow = setupBackground();
+    bgProcessWindow = setupBackground();
 } );
 
 app.on( 'open-url', ( e, url ) =>
@@ -182,8 +208,7 @@ app.on( 'open-url', ( e, url ) =>
 
 app.on( 'window-all-closed', () =>
 {
-
-    logger.verbose( 'All Windows Closed!')
+    logger.verbose( 'All Windows Closed!' );
 
 
     // Don't show the app in the doc

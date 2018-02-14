@@ -5,7 +5,7 @@ import i18n from 'i18n';
 import authenticator from './authenticator';
 import CONSTANTS from '../auth-constants';
 import config from '../config';
-import { handleConnResponse } from '../network';
+// import { handleConnResponse } from '../network';
 import logger from 'logger';
 
 config.i18n();
@@ -21,12 +21,16 @@ const parseResUrl = ( url ) =>
 
 const openExternal = ( uri ) =>
 {
+
+    logger.info('openening exgernal', uri );
     if ( !uri || ( uri.indexOf( 'safe' ) !== 0 ) || reqQ.req.type !== CONSTANTS.CLIENT_TYPES.DESKTOP )
     {
+        logger.info('not openening' );
         return;
     }
     try
     {
+        logger.info('actually opening external');
         shell.openExternal( parseResUrl( uri ) );
     }
     catch ( err )
@@ -103,14 +107,17 @@ class ReqQueue
                 ipcEvent.sender.send( self.resChannelName, self.req );
             }
 
-            if ( this.req.uri === global.browserReqUri )
-            {
-                handleConnResponse( parseResUrl( res ) );
-            }
-            else
-            {
+            // if ( this.req.uri === global.peruseRequestUri )
+            // {
+            //     //this is happening main process.
+            //     // As Peruse App is in BG Process. We need to punt this over there.
+            //     // TODO: Twweak this once in the same process.
+            //     handleConnResponse( parseResUrl( res ) );
+            // }
+            // else
+            // {
                 openExternal( res );
-            }
+            // }
 
             self.next();
             return;

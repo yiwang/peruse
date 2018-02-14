@@ -1,13 +1,13 @@
 // @flow
-import { TYPES } from 'actions/safe_actions';
+import { TYPES } from 'actions/peruse_actions';
 import initialAppState from './initialAppState';
 import logger from 'logger';
 
 import { SAFE, CONFIG } from 'appConstants';
 
-const initialState = initialAppState.safeNetwork;
+const initialState = initialAppState.peruseApp;
 
-export default function safeNetwork( state = initialState, action )
+export default function peruseApp( state = initialState, action )
 {
     if ( action.error )
     {
@@ -49,6 +49,12 @@ export default function safeNetwork( state = initialState, action )
         {
             return { ...state,
                 readStatus : payload,
+            };
+        }
+        case TYPES.RECEIVED_AUTH_RESPONSE:
+        {
+            return { ...state,
+                authResponseUri : payload,
             };
         }
         case TYPES.SET_SAVE_CONFIG_STATUS:

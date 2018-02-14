@@ -1,16 +1,16 @@
 /* eslint-disable func-names */
-import safeNetwork from 'reducers/safeNetwork';
-import { TYPES } from 'actions/safe_actions';
+import peruseApp from 'reducers/peruseApp';
+import { TYPES } from 'actions/peruse_actions';
 import initialState from 'reducers/initialAppState';
 import { SAFE, CONFIG } from 'appConstants';
 
-const safeInitialState = initialState.safeNetwork;
+const safeInitialState = initialState.peruseApp;
 
-describe( 'safe network reducer', () =>
+describe( 'Peruse App reducer', () =>
 {
     it( 'should return the initial state', () =>
     {
-        expect( safeNetwork( undefined, {} ) ).toEqual( initialState.safeNetwork );
+        expect( peruseApp( undefined, {} ) ).toEqual( initialState.peruseApp );
     } );
 
     describe( 'SET_INITIALIZER_TASK', () =>
@@ -20,7 +20,7 @@ describe( 'safe network reducer', () =>
             const payload =  'well hi';
 
             expect(
-                safeNetwork( safeInitialState, {
+                peruseApp( safeInitialState, {
                     type    : TYPES.SET_INITIALIZER_TASK,
                     payload
                 } ).tasks
@@ -35,7 +35,7 @@ describe( 'safe network reducer', () =>
             const payload =   SAFE.APP_STATUS.AUTHORISING;
 
             expect(
-                safeNetwork( safeInitialState, {
+                peruseApp( safeInitialState, {
                     type    : TYPES.SET_AUTH_APP_STATUS,
                     payload
                 } )
@@ -53,7 +53,7 @@ describe( 'safe network reducer', () =>
             const payload =  { fakeApp: 'yesIam' };
 
             expect(
-                safeNetwork( safeInitialState, {
+                peruseApp( safeInitialState, {
                     type    : TYPES.AUTHORISED_APP,
                     payload
                 } )
@@ -72,11 +72,27 @@ describe( 'safe network reducer', () =>
             const payload =  SAFE.SAVE_STATUS.TO_SAVE;
 
             expect(
-                safeNetwork( safeInitialState, {
+                peruseApp( safeInitialState, {
                     type    : TYPES.SET_SAVE_CONFIG_STATUS,
                     payload
                 } )
             ).toMatchObject( { saveStatus : SAFE.SAVE_STATUS.TO_SAVE } );
+        } );
+    });
+
+
+    describe( 'RECEIVED_AUTH_RESPONSE', () =>
+    {
+        it( 'should handle saving browser', () =>
+        {
+            const payload =  'URLofAUTHResponse';
+
+            expect(
+                peruseApp( safeInitialState, {
+                    type    : TYPES.RECEIVED_AUTH_RESPONSE,
+                    payload
+                } )
+            ).toMatchObject( { authResponseUri : payload } );
         } );
     });
 
@@ -87,7 +103,7 @@ describe( 'safe network reducer', () =>
             const payload =  'testing';
 
             expect(
-                safeNetwork( safeInitialState, {
+                peruseApp( safeInitialState, {
                     type    : TYPES.SAFE_NETWORK_STATUS_CHANGED,
                     payload
                 } ).networkStatus
