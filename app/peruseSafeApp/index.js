@@ -1,4 +1,3 @@
-import { shell } from 'electron';
 import {
     saveConfigToSafe,
     readConfigFromSafe
@@ -8,7 +7,7 @@ import { initializeApp, fromAuthURI } from '@maidsafe/safe-node-app';
 import { APP_INFO, CONFIG, SAFE, PROTOCOLS } from 'appConstants';
 //
 // import { requestAuth, clearAppObj } from 'extensions/safe/network';
-import * as safeActions from 'actions/peruse_actions';
+import * as peruseAppActions from 'actions/peruse_actions';
 import * as notificationActions from 'actions/notification_actions';
 import logger from 'logger';
 // import { openExternal } from 'extensions/safe/ffi/ipc';
@@ -32,9 +31,9 @@ const handlePeruseStoreChanges = ( store ) =>
 }
 
 // NEEDED???
-export const parseUrl = url => (
-  (url.indexOf('safe-auth://') === -1) ? url.replace('safe-auth:', 'safe-auth://') : url
-);
+// export const parseUrl = url => (
+//   (url.indexOf('safe-auth://') === -1) ? url.replace('safe-auth:', 'safe-auth://') : url
+// );
 
 const authPeruseApp = async () =>
 {
@@ -45,14 +44,9 @@ const authPeruseApp = async () =>
         const authReq = await appObj.auth.genAuthUri( APP_INFO.permissions, APP_INFO.opts );
 
         global.browserAuthReqUri = authReq.uri;
-        logger.info('TRYING TO AUTH EPRUSEEEEE', authReq.uri)
+        await appObj.auth.openUri(authReq.uri);
 
-        //here send to authenticator in main process for now.
-        // handleSafeAuthUrlReception( authReq.uri );
-        // shell.openExternal( authReq.uri );
-        await appObj.auth.openUri(parseUrl(authReq.uri));
-
-        logger.info('AFTER THE AWAITING FOR YOUU', appObj)
+        // logger.info('AFTER THE AWAITING FOR YOUU', appObj)
         return appObj;
     }
     catch ( err )
@@ -74,7 +68,7 @@ const manageAuthorisationActions = async ( store ) =>
     if ( state.peruseApp.appStatus === SAFE.APP_STATUS.TO_AUTH )
     {
         logger.info('SHOULD EB AUTHINGGG')
-        store.dispatch( safeActions.setAuthAppStatus( SAFE.APP_STATUS.AUTHORISING ) );
+        store.dispatch( peruseAppActions.setAuthAppStatus( SAFE.APP_STATUS.AUTHORISING ) );
         const app = await authPeruseApp();
     }
 };
@@ -114,13 +108,13 @@ const manageReadStateActions = async ( store ) =>
     if ( peruseApp.appStatus === SAFE.APP_STATUS.AUTHORISED &&
         peruseApp.networkStatus === SAFE.NETWORK_STATE.CONNECTED )
     {
-        store.dispatch( safeActions.setReadConfigStatus( SAFE.READ_STATUS.READING ) );
+        store.dispatch( peruseAppActions.setReadConfigStatus( SAFE.READ_STATUS.READING ) );
         readConfigFromSafe( store )
             .then( savedState =>
             {
-                store.dispatch( safeActions.receivedConfig( savedState ) );
+                store.dispatch( peruseAppActions.receivedConfig( savedState ) );
                 store.dispatch(
-                    safeActions.setReadConfigStatus( SAFE.READ_STATUS.READ_SUCCESSFULLY )
+                    peruseAppActions.setReadConfigStatus( SAFE.READ_STATUS.READ_SUCCESSFULLY )
                 );
                 return null;
             } )
@@ -128,14 +122,14 @@ const manageReadStateActions = async ( store ) =>
             {
                 logger.error( e );
                 store.dispatch(
-                    safeActions.setSaveConfigStatus( SAFE.SAVE_STATUS.FAILED_TO_READ )
+                    peruseAppActions.setSaveConfigStatus( SAFE.SAVE_STATUS.FAILED_TO_READ )
                 );
                 throw new Error( e );
             } );
     }
     else if ( !peruseAppIsConnected( state ) )
     {
-        store.dispatch( safeActions.setReadConfigStatus( SAFE.READ_STATUS.FAILED_TO_READ ) );
+        store.dispatch( peruseAppActions.setReadConfigStatus( SAFE.READ_STATUS.FAILED_TO_READ ) );
         store.dispatch( notificationActions.addNotification(
             {
                 text: 'Unable to read the browser state. The network is not yet connected.',
@@ -146,7 +140,7 @@ const manageReadStateActions = async ( store ) =>
     // TODO: Refactor and DRY this out between save/read?
     else if ( !authingStates.includes( peruseApp.appStatus ) )
     {
-        store.dispatch( safeActions.setAuthAppStatus( SAFE.APP_STATUS.TO_AUTH ) );
+        store.dispatch( peruseAppActions.setAuthAppStatus( SAFE.APP_STATUS.TO_AUTH ) );
     }
 
 
@@ -154,7 +148,7 @@ const manageReadStateActions = async ( store ) =>
     if ( peruseApp.readStatus === SAFE.READ_STATUS.FAILED_TO_READ &&
         peruseApp.appStatus === SAFE.APP_STATUS.AUTHORISED )
     {
-        store.dispatch( safeActions.setReadConfigStatus( SAFE.READ_STATUS.TO_READ ) );
+        store.dispatch( peruseAppActions.setReadConfigStatus( SAFE.READ_STATUS.TO_READ ) );
     }
 };
 
@@ -186,7 +180,7 @@ const manageSaveStateActions = async ( store ) =>
             peruseApp.readStatus !== SAFE.READ_STATUS.READING )
         {
             logger.verbose( 'Can\'t save, not read yet. Triggering a read.' );
-            store.dispatch( safeActions.setReadConfigStatus( SAFE.READ_STATUS.TO_READ ) );
+            store.dispatch( peruseAppActions.setReadConfigStatus( SAFE.READ_STATUS.TO_READ ) );
         }
 
         return;
@@ -195,12 +189,12 @@ const manageSaveStateActions = async ( store ) =>
     if ( peruseApp.appStatus === SAFE.APP_STATUS.AUTHORISED &&
         peruseApp.networkStatus === SAFE.NETWORK_STATE.CONNECTED )
     {
-        store.dispatch( safeActions.setSaveConfigStatus( SAFE.SAVE_STATUS.SAVING ) );
+        store.dispatch( peruseAppActions.setSaveConfigStatus( SAFE.SAVE_STATUS.SAVING ) );
         saveConfigToSafe( store )
             .then( () =>
             {
                 store.dispatch(
-                    safeActions.setSaveConfigStatus( SAFE.SAVE_STATUS.SAVED_SUCCESSFULLY )
+                    peruseAppActions.setSaveConfigStatus( SAFE.SAVE_STATUS.SAVED_SUCCESSFULLY )
                 );
 
                 return null;
@@ -211,7 +205,7 @@ const manageSaveStateActions = async ( store ) =>
 
                 // TODO: Handle errors across the store in a separate error watcher?
                 store.dispatch(
-                    safeActions.setSaveConfigStatus( SAFE.SAVE_STATUS.FAILED_TO_SAVE )
+                    peruseAppActions.setSaveConfigStatus( SAFE.SAVE_STATUS.FAILED_TO_SAVE )
                 );
                 throw new Error( e );
             } );
@@ -220,7 +214,7 @@ const manageSaveStateActions = async ( store ) =>
     // {
     //     // TODO: Here... this bit o logic needs to be general.
     //     // AND. trigger safe app auth actually.
-    //     store.dispatch( safeActions.setSaveConfigStatus( SAFE.SAVE_STATUS.FAILED_TO_SAVE ) );
+    //     store.dispatch( peruseAppActions.setSaveConfigStatus( SAFE.SAVE_STATUS.FAILED_TO_SAVE ) );
     //     store.dispatch( notificationActions.addNotification(
     //         {
     //             text: 'Unable to save the browser state. The network is not yet connected.',
@@ -230,14 +224,14 @@ const manageSaveStateActions = async ( store ) =>
     // }
     else if ( !authingStates.includes( state.peruseApp.appStatus ) )
     {
-        store.dispatch( safeActions.setAuthAppStatus( SAFE.APP_STATUS.TO_AUTH ) );
+        store.dispatch( peruseAppActions.setAuthAppStatus( SAFE.APP_STATUS.TO_AUTH ) );
     }
 
 
     if ( peruseApp.saveStatus === SAFE.SAVE_STATUS.FAILED_TO_SAVE &&
         peruseApp.appStatus === SAFE.APP_STATUS.AUTHORISED )
     {
-        store.dispatch( safeActions.setSaveConfigStatus( SAFE.SAVE_STATUS.TO_SAVE ) );
+        store.dispatch( peruseAppActions.setSaveConfigStatus( SAFE.SAVE_STATUS.TO_SAVE ) );
     }
 };
 

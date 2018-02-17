@@ -4,7 +4,7 @@ const initialState = {
     ],
     peruseApp : {
         appStatus       : null,
-        networkStatus   : null,
+        networkStatus   : undefined,
         app             : null,
         tasks           : [],
         readStatus      : '',

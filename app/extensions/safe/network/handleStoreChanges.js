@@ -1,7 +1,7 @@
 import { SAFE } from 'appConstants';
 
 import { requestAuth, clearAppObj } from '../network';
-import * as safeActions from 'actions/peruse_actions';
+import * as peruseAppActions from 'actions/peruse_actions';
 import * as notificationActions from 'actions/notification_actions';
 import logger from 'logger';
 
@@ -53,7 +53,7 @@ const networkIsConnected = ( state ) =>
 //
 //     if ( state.peruseApp.appStatus === SAFE.APP_STATUS.TO_AUTH )
 //     {
-//         store.dispatch( safeActions.setAuthAppStatus( SAFE.APP_STATUS.AUTHORISING ) );
+//         store.dispatch( peruseAppActions.setAuthAppStatus( SAFE.APP_STATUS.AUTHORISING ) );
 //         const app = await requestAuth();
 //     }
 // };
@@ -69,10 +69,10 @@ const manageLogout = async ( store ) =>
 
     if ( state.peruseApp.appStatus === SAFE.APP_STATUS.TO_LOGOUT )
     {
-        store.dispatch( safeActions.setAuthAppStatus( SAFE.APP_STATUS.LOGGING_OUT ) );
-        store.dispatch( safeActions.resetStore() );
+        store.dispatch( peruseAppActions.setAuthAppStatus( SAFE.APP_STATUS.LOGGING_OUT ) );
+        store.dispatch( peruseAppActions.resetStore() );
         clearAppObj();
-        store.dispatch( safeActions.setAuthAppStatus( SAFE.APP_STATUS.LOGGED_OUT ) );
+        store.dispatch( peruseAppActions.setAuthAppStatus( SAFE.APP_STATUS.LOGGED_OUT ) );
     }
 };
 
@@ -87,10 +87,10 @@ const manageLogout = async ( store ) =>
 //
 //     if ( state.peruseApp.appStatus === SAFE.APP_STATUS.LOGGED_IN_TO_NETWORK)
 //     {
-//         store.dispatch( safeActions.setAuthAppStatus( SAFE.APP_STATUS.LOGGING_OUT ) );
-//         store.dispatch( safeActions.resetStore() );
+//         store.dispatch( peruseAppActions.setAuthAppStatus( SAFE.APP_STATUS.LOGGING_OUT ) );
+//         store.dispatch( peruseAppActions.resetStore() );
 //         clearAppObj();
-//         store.dispatch( safeActions.setAuthAppStatus( SAFE.APP_STATUS.LOGGED_OUT ) );
+//         store.dispatch( peruseAppActions.setAuthAppStatus( SAFE.APP_STATUS.LOGGED_OUT ) );
 //     }
 // };
 
