@@ -28,7 +28,7 @@ import handleCommands from './commandHandling';
 import { setupWebAPIs } from './webAPIs';
 
 // TODO: This should be handled in an extensible fashion
-import { handleOpenUrl } from './extensions/safe/network';
+import { handleSafeAuthUrlReception } from './extensions/safe/network';
 import { addTab, closeActiveTab } from 'actions/tabs_actions';
 import { setupServerVars, startServer } from './server';
 
@@ -53,12 +53,22 @@ ipcMain.on( 'errorInWindow', ( event, data ) =>
 
 const mainWindow = null;
 
+
+
 const handleSafeUrls = ( url ) =>
 {
-    // TODO. Queue incase of not started.
-    handleOpenUrl( url );
-
+    // added as from renderer it's receiving as a lowercase string. WHY?
     const parsedUrl = parseURL( url );
+
+    // const urlForSafeParsing = { ...parsedUrl };
+
+    // logger.info('THE URLLLLLLL', url, urlForSafeParsing);
+    // urlForSafeParsing.host = parsedUrl.host.toUpperCase();
+
+    // let parsableURL = url.toUpperCase();
+    // TODO. Queue incase of not started.
+    handleSafeAuthUrlReception( url );
+    logger.verbose('Receiving Open Window Param (a url)', url, parsedUrl)
 
     // TODO: Use constants // 'shouldOpenUrl...'
     if ( parsedUrl.protocol === 'safe:' )
@@ -66,6 +76,8 @@ const handleSafeUrls = ( url ) =>
         store.dispatch( addTab( { url, isActiveTab: true } ) );
     }
 };
+
+
 
 // Register all schemes from package.json
 protocol.registerStandardSchemes( pkg.build.protocols.schemes, { secure: true } );

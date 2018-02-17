@@ -1,4 +1,4 @@
-import * as safe from 'actions/safe_actions';
+import * as safe from 'actions/peruse_actions';
 
 describe( 'notification actions', () =>
 {
@@ -73,12 +73,12 @@ describe( 'notification actions', () =>
         expect( safe.storeNewAccount( ) ).toEqual( expectedAction );
     } );
 
-    it( 'should safeNetworkStatusChanged', () =>
+    it( 'should peruseAppStatusChanged', () =>
     {
         const expectedAction = {
             type : safe.TYPES.SAFE_NETWORK_STATUS_CHANGED
         };
-        expect( safe.safeNetworkStatusChanged( ) ).toEqual( expectedAction );
+        expect( safe.peruseAppStatusChanged( ) ).toEqual( expectedAction );
     } );
 
     it( 'should reconnectSafeApp', () =>

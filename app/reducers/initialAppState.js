@@ -2,7 +2,7 @@ const initialState = {
     bookmarks     : [{ url: 'safe-auth://home/#/login' }],
     notifications : [
     ],
-    safeNetwork : {
+    peruseApp : {
         appStatus       : null,
         networkStatus   : null,
         app             : null,

@@ -1,19 +1,22 @@
-import { app } from 'electron';
+// import { app } from 'electron';
 import { initializeApp, fromAuthURI } from '@maidsafe/safe-node-app';
 import { APP_INFO, CONFIG, SAFE, PROTOCOLS } from 'appConstants';
 import logger from 'logger';
 import { parse as parseURL } from 'url';
 // import { executeScriptInBackground } from 'utils/background-process';
 import { addNotification, clearNotification } from 'actions/notification_actions';
-import * as safeActions from 'actions/safe_actions';
+import * as safeActions from 'actions/peruse_actions';
 import { callIPC } from '../ffi/ipc';
+import ipc from '../ffi/ipc';
 import AUTH_CONSTANTS from '../auth-constants';
 
 const queue = [];
 let appObj;
 let store;
-let browserReqUri;
+let peruseRequestUri;
 let browserAuthReqUri;
+
+ipc();
 
 export const authFromQueue = async () =>
 {
@@ -25,6 +28,9 @@ export const authFromQueue = async () =>
 
 const authFromRes = async ( res, isAuthenticated ) =>
 {
+    logger.info('AUTH FROM RESPONSE HAPPENINGNINGINNGINNGINGINGINGNG')
+
+    //TODO: This logic shuld be in BG process for peruse.
     try
     {
         appObj = await appObj.auth.loginFromURI( res );
@@ -96,7 +102,7 @@ export const initAnon = async ( passedStore ) =>
 
         const authType = parseSafeAuthUrl( authReq.uri );
 
-        global.browserReqUri = authReq.uri;
+        global.peruseRequestUri = authReq.uri;
 
         if ( authType.action === 'auth' )
         {
@@ -115,7 +121,7 @@ export const initAnon = async ( passedStore ) =>
 export const handleConnResponse = ( url, isAuthenticated ) => authFromRes( url, isAuthenticated );
 
 
-export const handleOpenUrl = async ( res ) =>
+export const handleSafeAuthUrlReception = async ( res ) =>
 {
     if ( typeof res !== 'string' )
     {
@@ -181,7 +187,7 @@ export const requestAuth = async () =>
 
         global.browserAuthReqUri = authReq.uri;
 
-        handleOpenUrl( authReq.uri );
+        handleSafeAuthUrlReception( authReq.uri );
         return appObj;
     }
     catch ( err )

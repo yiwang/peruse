@@ -15,6 +15,7 @@ export const isRunningDevelopment = /^dev/.test( env );
 export const isRunningSpectronTest = !!process.env.IS_SPECTRON;
 
 export const inRendererProcess = typeof window !== 'undefined';
+export const inMainProcess = !inRendererProcess;
 
 // Set global for tab preload.
 // Adds app folder for asar packaging (space before app is important).

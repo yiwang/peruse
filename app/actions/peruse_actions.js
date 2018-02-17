@@ -27,7 +27,7 @@ export const {
 
     setInitializerTask,
     storeNewAccount,
-    safeNetworkStatusChanged,
+    peruseAppStatusChanged,
     reconnectSafeApp,
 
     resetStore
