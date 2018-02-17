@@ -8,6 +8,7 @@ const initialState = {
         app             : null,
         tasks           : [],
         readStatus      : '',
+        authResponseUri : '',
         savedBeforeQuit : false,
         saveStatus      : ''
     },

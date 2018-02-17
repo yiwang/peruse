@@ -6,7 +6,7 @@ import { SAFE, CONFIG } from 'appConstants';
 
 const safeInitialState = initialState.peruseApp;
 
-describe( 'safe network reducer', () =>
+describe( 'Peruse App reducer', () =>
 {
     it( 'should return the initial state', () =>
     {
@@ -77,6 +77,22 @@ describe( 'safe network reducer', () =>
                     payload
                 } )
             ).toMatchObject( { saveStatus : SAFE.SAVE_STATUS.TO_SAVE } );
+        } );
+    });
+
+
+    describe( 'RECEIVED_AUTH_RESPONSE', () =>
+    {
+        it( 'should handle saving browser', () =>
+        {
+            const payload =  'URLofAUTHResponse';
+
+            expect(
+                peruseApp( safeInitialState, {
+                    type    : TYPES.RECEIVED_AUTH_RESPONSE,
+                    payload
+                } )
+            ).toMatchObject( { authResponseUri : payload } );
         } );
     });
 

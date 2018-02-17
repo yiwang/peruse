@@ -8,6 +8,7 @@ export const TYPES = {
 
     //read status from network
     RECEIVED_CONFIG : 'RECEIVED_CONFIG',
+    RECEIVED_AUTH_RESPONSE : 'RECEIVED_AUTH_RESPONSE',
 
     SET_INITIALIZER_TASK        : 'SET_INITIALIZER_TASK',
     STORE_NEW_ACCOUNT           : 'STORE_NEW_ACCOUNT',
@@ -24,6 +25,7 @@ export const {
     authorisedApp,
 
     receivedConfig,
+    receivedAuthResponse,
 
     setInitializerTask,
     storeNewAccount,
@@ -38,6 +40,7 @@ export const {
     TYPES.AUTHORISED_APP,
 
     TYPES.RECEIVED_CONFIG,
+    TYPES.RECEIVED_AUTH_RESPONSE,
 
     TYPES.SET_INITIALIZER_TASK,
     TYPES.STORE_NEW_ACCOUNT,

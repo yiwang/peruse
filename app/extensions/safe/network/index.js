@@ -5,7 +5,7 @@ import logger from 'logger';
 import { parse as parseURL } from 'url';
 // import { executeScriptInBackground } from 'utils/background-process';
 import { addNotification, clearNotification } from 'actions/notification_actions';
-import * as safeActions from 'actions/peruse_actions';
+import * as peruseAppActions from 'actions/peruse_actions';
 import { callIPC } from '../ffi/ipc';
 import ipc from '../ffi/ipc';
 import AUTH_CONSTANTS from '../auth-constants';
@@ -39,8 +39,8 @@ const authFromRes = async ( res, isAuthenticated ) =>
         {
             // TODO: AuthorisedApp should be localscope?
             // this appObj cant be used, so maybe there's no need to bother here?
-            store.dispatch( safeActions.authorisedApp( appObj ) );
-            store.dispatch( safeActions.setAuthAppStatus( SAFE.APP_STATUS.AUTHORISED ) );
+            store.dispatch( peruseAppActions.authorisedApp( appObj ) );
+            store.dispatch( peruseAppActions.setAuthAppStatus( SAFE.APP_STATUS.AUTHORISED ) );
         }
     }
     catch ( err )
@@ -118,7 +118,7 @@ export const initAnon = async ( passedStore ) =>
     }
 };
 
-export const handleConnResponse = ( url, isAuthenticated ) => authFromRes( url, isAuthenticated );
+// export const handleConnResponse = ( url, isAuthenticated ) => authFromRes( url, isAuthenticated );
 
 
 export const handleSafeAuthUrlReception = async ( res ) =>

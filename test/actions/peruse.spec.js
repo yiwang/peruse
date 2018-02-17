@@ -43,6 +43,16 @@ describe( 'notification actions', () =>
         expect( peruseAppActions.receivedConfig( payload ) ).toEqual( expectedAction );
     } );
 
+    it( 'should have RECEIVED_AUTH_RESPONSE', () =>
+    {
+        const payload = 'lalalalallaaaaaaa';
+        const expectedAction = {
+            type : peruseAppActions.TYPES.RECEIVED_AUTH_RESPONSE,
+            payload
+        };
+        expect( peruseAppActions.receivedAuthResponse( payload ) ).toEqual( expectedAction );
+    } );
+
 
     it( 'should have authorisedApp', () =>
     {

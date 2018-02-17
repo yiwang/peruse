@@ -15,6 +15,7 @@ import logger from 'logger';
 import { isRunningUnpacked, isRunningPackaged, PROTOCOLS } from 'appConstants';
 import { parse as parseURL } from 'url';
 import pkg from 'appPackage';
+import * as peruseAppActions from 'actions/peruse_actions';
 
 import setupBackground from './setupBackground';
 
@@ -67,13 +68,26 @@ const handleSafeUrls = ( url ) =>
 
     // let parsableURL = url.toUpperCase();
     // TODO. Queue incase of not started.
-    handleSafeAuthUrlReception( url );
-    logger.verbose('Receiving Open Window Param (a url)', url, parsedUrl)
+    logger.verbose('Receiving Open Window Param (a url)', url, parsedUrl);
 
-    // TODO: Use constants // 'shouldOpenUrl...'
-    if ( parsedUrl.protocol === 'safe:' )
+    // If the received URL protocol is looong and starts with 'safe' it's fair to assume it's the
+    // auth response
+    // Currently _ONLY_ peruse is going to be making a req.fe
+    // When we have more... What then? Are we able to retrieve the url schemes registered for a given app?
+
+    if ( parsedUrl.protocol === 'safe-auth:' )
+    {
+        handleSafeAuthUrlReception( url );
+        store.dispatch( addTab( { url, isActiveTab: true } ) );
+    }
+    else if ( parsedUrl.protocol === 'safe:' )
     {
         store.dispatch( addTab( { url, isActiveTab: true } ) );
+    }
+     // 20 is arbitrary right now.... LONG.
+    else if( parsedUrl.protocol.startsWith('safe-') && parsedUrl.protocol.length > 20)
+    {
+        store.dispatch( peruseAppActions.receivedAuthResponse( url ) );
     }
 };
 

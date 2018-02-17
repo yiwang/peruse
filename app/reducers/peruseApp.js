@@ -51,6 +51,12 @@ export default function peruseApp( state = initialState, action )
                 readStatus : payload,
             };
         }
+        case TYPES.RECEIVED_AUTH_RESPONSE:
+        {
+            return { ...state,
+                authResponseUri : payload,
+            };
+        }
         case TYPES.SET_SAVE_CONFIG_STATUS:
         {
             return { ...state,
