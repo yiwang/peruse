@@ -19,6 +19,12 @@ const authingStates = [
 ];
 
 let appObj;
+
+
+// TODO: Question. Is a big bunch of switch statements better than jsut registering/revoking a specific
+// listener to the store for one off things?
+
+
 /**
  * Setup actions to be triggered in response to store state changes.
  * @param  { ReduxStore } store [description]
@@ -35,7 +41,7 @@ const handlePeruseStoreChanges = ( store ) =>
 //   (url.indexOf('safe-auth://') === -1) ? url.replace('safe-auth:', 'safe-auth://') : url
 // );
 
-const authPeruseApp = async () =>
+const requestPeruseAppAuthentication = async () =>
 {
     try
     {
@@ -56,6 +62,45 @@ const authPeruseApp = async () =>
     }
 };
 
+// TODO: Watch out, this is duped in netowrk.js for funcs over there.
+export const getAppObj = () =>
+    appObj;
+
+const authFromRes = async ( res, store ) =>
+{
+    logger.info('PERUSE AUTH FROM RESPONSE HAPPENINGNINGINNGINNGINGINGINGNG')
+
+    //TODO: This logic shuld be in BG process for peruse.
+    try
+    {
+        appObj = await appObj.auth.loginFromURI( res );
+        logger.info('past the loginfromAUTHHHHH', appObj);
+        if ( store )
+        {
+            // TODO: AuthorisedApp should be localscope?
+            // this appObj cant be used, so maybe there's no need to bother here?
+            store.dispatch( peruseAppActions.authorisedApp( appObj ) );
+            store.dispatch( peruseAppActions.setAuthAppStatus( SAFE.APP_STATUS.AUTHORISED ) );
+        }
+    }
+    catch ( err )
+    {
+        if ( store )
+        {
+            let message = err.message;
+
+            if( err.message.startsWith( 'Unexpected (probably a logic') )
+            {
+                message = `Check your current IP address matches your registered address at invite.maidsafe.net`;
+            }
+            store.dispatch( addNotification( { text: message, onDismiss: clearNotification } ) );
+        }
+
+        logger.error( err.message || err );
+        logger.error( '>>>>>>>>>>>>>' );
+    }
+};
+
 /**
  * Handle triggering actions and related functionality for Authorising on the SAFE netowrk
  * based upon the application auth state
@@ -63,13 +108,21 @@ const authPeruseApp = async () =>
  */
 const manageAuthorisationActions = async ( store ) =>
 {
-    const state = store.getState();
+    const peruse = store.getState().peruseApp;
 
-    if ( state.peruseApp.appStatus === SAFE.APP_STATUS.TO_AUTH )
+    if ( peruse.appStatus === SAFE.APP_STATUS.TO_AUTH )
     {
         logger.info('SHOULD EB AUTHINGGG')
         store.dispatch( peruseAppActions.setAuthAppStatus( SAFE.APP_STATUS.AUTHORISING ) );
-        const app = await authPeruseApp();
+        await requestPeruseAppAuthentication();
+    }
+
+    if( peruse.authResponseUri && peruse.authResponseUri.length )
+    {
+        // TODO: This should 'clear' or somesuch....
+        // OR: Only run if not authed?
+        store.dispatch( peruseAppActions.receivedAuthResponse( '' ) );
+        authFromRes( peruse.authResponseUri, store );
     }
 };
 

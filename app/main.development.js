@@ -44,7 +44,6 @@ const loadMiddlewarePackages = [];
 const store = configureStore( initialState, loadMiddlewarePackages );
 
 
-
 global.mainProcessStore = store;
 // renderer error notifications
 ipcMain.on( 'errorInWindow', ( event, data ) =>
@@ -53,7 +52,6 @@ ipcMain.on( 'errorInWindow', ( event, data ) =>
 } );
 
 const mainWindow = null;
-
 
 
 const handleSafeUrls = ( url ) =>
@@ -68,7 +66,7 @@ const handleSafeUrls = ( url ) =>
 
     // let parsableURL = url.toUpperCase();
     // TODO. Queue incase of not started.
-    logger.verbose('Receiving Open Window Param (a url)', url, parsedUrl);
+    logger.verbose( 'Receiving Open Window Param (a url)', url, parsedUrl );
 
     // If the received URL protocol is looong and starts with 'safe' it's fair to assume it's the
     // auth response
@@ -84,13 +82,12 @@ const handleSafeUrls = ( url ) =>
     {
         store.dispatch( addTab( { url, isActiveTab: true } ) );
     }
-     // 20 is arbitrary right now.... LONG.
-    else if( parsedUrl.protocol.startsWith('safe-') && parsedUrl.protocol.length > 20)
+    // 20 is arbitrary right now.... LONG.
+    else if ( parsedUrl.protocol.startsWith( 'safe-' ) && parsedUrl.protocol.length > 20 )
     {
         store.dispatch( peruseAppActions.receivedAuthResponse( url ) );
     }
 };
-
 
 
 // Register all schemes from package.json
@@ -208,8 +205,7 @@ app.on( 'open-url', ( e, url ) =>
 
 app.on( 'window-all-closed', () =>
 {
-
-    logger.verbose( 'All Windows Closed!')
+    logger.verbose( 'All Windows Closed!' );
 
 
     // Don't show the app in the doc

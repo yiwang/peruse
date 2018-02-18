@@ -22,9 +22,11 @@ export const authFromQueue = async () =>
 {
     if ( queue.length )
     {
+        logger.info('<<<<<<<<<<<<<WOULD BE AUTHING FROM RESPONSE. BUT THAT IS MOVED TO BG PROCESS>......')
         authFromRes( queue[0] ); // hack for testing
     }
 };
+
 
 const authFromRes = async ( res, isAuthenticated ) =>
 {
