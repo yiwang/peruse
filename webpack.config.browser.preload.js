@@ -13,7 +13,7 @@ export default merge.smart( baseConfig, {
 
     target : 'electron-renderer',
 
-    entry : ['babel-polyfill', './app/browserPreload.development'],
+    entry : [ './app/browserPreload.development'],
 
     output : {
         path     : __dirname,

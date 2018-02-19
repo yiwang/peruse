@@ -17,7 +17,7 @@ export const setClientToMainBrowserWindow = async( app ) =>
     // console.log('clienwindow Count', await client.getWindowCount( ))
 
     const windows =  await client.getWindowCount();
-
+    console.log( 'windowsss', windows );
     for (var i = 0; i < windows; i++) {
         // TODO: Use window title to differentiate between PeruseBrowserWindow instances?
         const theWindow = await client.windowByIndex( i );
@@ -26,10 +26,10 @@ export const setClientToMainBrowserWindow = async( app ) =>
         console.log('window', i, url)
         // get the PeruseBrowserWindow
         // TODO: If more than one...? (checkFocus)
-        if( urlObj.path.endsWith('app.html') )
+        if( urlObj.path.includes('app.html') )
         {
             peruseBrowserWindowIndex = i;
-            // break;
+            break;
         }
     }
 
