@@ -66,7 +66,7 @@ const handleSafeUrls = ( url ) =>
 
     // let parsableURL = url.toUpperCase();
     // TODO. Queue incase of not started.
-    logger.verbose( 'Receiving Open Window Param (a url)', url, parsedUrl );
+    logger.verbose( 'Receiving Open Window Param (a url)', url );
 
     // If the received URL protocol is looong and starts with 'safe' it's fair to assume it's the
     // auth response
@@ -75,16 +75,19 @@ const handleSafeUrls = ( url ) =>
 
     if ( parsedUrl.protocol === 'safe-auth:' )
     {
+        logger.info('AUTH URL RECEIVIEDD', url)
         handleSafeAuthUrlReception( url );
-        store.dispatch( addTab( { url, isActiveTab: true } ) );
+        // store.dispatch( addTab( { url, isActiveTab: true } ) );
     }
     else if ( parsedUrl.protocol === 'safe:' )
     {
+        logger.info('SAFE URL RECEIVIEDD', url)
         store.dispatch( addTab( { url, isActiveTab: true } ) );
     }
     // 20 is arbitrary right now.... LONG.
     else if ( parsedUrl.protocol.startsWith( 'safe-' ) && parsedUrl.protocol.length > 20 )
     {
+        logger.info('RECEIVED RESPNSE AND PASSING IT ON')
         store.dispatch( peruseAppActions.receivedAuthResponse( url ) );
     }
 };

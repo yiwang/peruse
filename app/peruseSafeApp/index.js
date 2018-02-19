@@ -37,9 +37,9 @@ const handlePeruseStoreChanges = ( store ) =>
 }
 
 // NEEDED???
-// export const parseUrl = url => (
-//   (url.indexOf('safe-auth://') === -1) ? url.replace('safe-auth:', 'safe-auth://') : url
-// );
+export const parseUrl = url => (
+  (url.indexOf('safe-auth://') === -1) ? url.replace('safe-auth:', 'safe-auth://') : url
+);
 
 const requestPeruseAppAuthentication = async () =>
 {
@@ -50,7 +50,8 @@ const requestPeruseAppAuthentication = async () =>
         const authReq = await appObj.auth.genAuthUri( APP_INFO.permissions, APP_INFO.opts );
 
         global.browserAuthReqUri = authReq.uri;
-        await appObj.auth.openUri(authReq.uri);
+        await appObj.auth.openUri(parseUrl( authReq.uri ) );
+        // await appObj.auth.openUri(authReq.uri);
 
         // logger.info('AFTER THE AWAITING FOR YOUU', appObj)
         return appObj;
@@ -228,7 +229,7 @@ const manageSaveStateActions = async ( store ) =>
     if ( peruseAppIsConnected( state ) && peruseApp.readStatus !== SAFE.READ_STATUS.READ_SUCCESSFULLY &&
         peruseApp.readStatus !== SAFE.READ_STATUS.READ_BUT_NONEXISTANT )
     {
-        logger.info('NOT SET TO SAVE STATE')
+        // logger.info('ALready SETUP TO SAVE STATE')
         if ( peruseApp.readStatus !== SAFE.READ_STATUS.TO_READ &&
             peruseApp.readStatus !== SAFE.READ_STATUS.READING )
         {
@@ -242,6 +243,8 @@ const manageSaveStateActions = async ( store ) =>
     if ( peruseApp.appStatus === SAFE.APP_STATUS.AUTHORISED &&
         peruseApp.networkStatus === SAFE.NETWORK_STATE.CONNECTED )
     {
+
+        logger.info('CONNECTED. going to try some saving.')
         store.dispatch( peruseAppActions.setSaveConfigStatus( SAFE.SAVE_STATUS.SAVING ) );
         saveConfigToSafe( store )
             .then( () =>
