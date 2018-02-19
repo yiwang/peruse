@@ -23,19 +23,19 @@ export const setClientToMainBrowserWindow = async( app ) =>
         const theWindow = await client.windowByIndex( i );
         const url = await client.getUrl();
         const urlObj = urlParse( url );
-
+        console.log('window', i, url)
         // get the PeruseBrowserWindow
         // TODO: If more than one...? (checkFocus)
         if( urlObj.path.endsWith('app.html') )
         {
             peruseBrowserWindowIndex = i;
-            break;
+            // break;
         }
     }
 
     console.log('peruseBrowserWindowIndex', peruseBrowserWindowIndex);
     await client.windowByIndex( peruseBrowserWindowIndex );
-    await client.waitUntilWindowLoaded();
+    // await client.waitUntilWindowLoaded();
 }
 
 

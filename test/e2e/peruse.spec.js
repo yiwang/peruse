@@ -54,12 +54,12 @@ describe( 'main window', () =>
         // getURL
         // getParentWindow
         // isVisible
-        console.log(await app)
-        console.log('^^^^^^^^^^^^^^^^^^^^^^^^^app^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^')
-        console.log(await app.client)
-        console.log('^^^^^^^^^^^^^^^^^^^^^^^^^app.client^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^')
-        console.log( await app.browserWindow)
-        console.log('^^^^^^^^^^^^^^^^^^^^^^^^^app.browserWindow^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^')
+        // console.log(await app)
+        // console.log('^^^^^^^^^^^^^^^^^^^^^^^^^app^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^')
+        // console.log(await app.client)
+        // console.log('^^^^^^^^^^^^^^^^^^^^^^^^^app.client^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^')
+        // console.log( await app.browserWindow)
+        // console.log('^^^^^^^^^^^^^^^^^^^^^^^^^app.browserWindow^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^')
     } );
 
     afterAll( () =>
@@ -73,9 +73,9 @@ describe( 'main window', () =>
     test( 'window loaded', async () => {
         let vis = await app.browserWindow.isVisible();
         //
-        console.log('whutbrowser',await app.browserWindow);
-        console.log('whutbrowser url ',await app.browserWindow.getURL());
-        console.log('whut', await app.client);
+        // console.log('whutbrowser',await app.browserWindow);
+        // console.log('whutbrowser url ',await app.browserWindow.getURL());
+        // console.log('whut', await app.client);
         // console.log('whut', await app.client.getURL());
         console.log('vis',vis);
 
