@@ -185,7 +185,7 @@ app.on( 'ready', async () =>
     // createTray();
     // createSafeInfoWindow();
 
-    bgProcessWindow = setupBackground();
+    // bgProcessWindow = setupBackground();
 } );
 
 app.on( 'open-url', ( e, url ) =>

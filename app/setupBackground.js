@@ -63,12 +63,15 @@ const setupBackground = () =>
             backgroundProcess.hide()
           }
         })
-
+        // Q. what does the bg matter?
+        // setting client earlier sorts?
+        //
+        // then lets see errororororrsss.
         backgroundProcess.webContents.on( 'did-finish-load', () =>
         {
             logger.info( 'BACKGROUND_PROCESS loaded');
 
-            if( isRunningPackaged || isRunningDevelopment )
+            if( isRunningUnpacked || isRunningDevelopment )
             {
                 backgroundProcess.webContents.openDevTools()
             }

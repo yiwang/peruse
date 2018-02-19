@@ -88,7 +88,7 @@ const openWindow = ( store ) =>
         authFromQueue();
 
         const webContentsId = mainWindow.webContents.id;
-
+        // global.browserWindowId = webContentsId;
         // set first browserWindow id upon initial opening.
         // otherwise, addTab with about:blank
         if ( browserWindowArray.length === 1 )
@@ -123,12 +123,12 @@ const openWindow = ( store ) =>
 export default openWindow;
 
 
-ipcMain.on( 'command:close-window', ( ) =>
-{
-    const win = BrowserWindow.getFocusedWindow();
-
-    if ( win )
-    {
-        win.close();
-    }
-} );
+// ipcMain.on( 'command:close-window', ( ) =>
+// {
+//     const win = BrowserWindow.getFocusedWindow();
+//
+//     if ( win )
+//     {
+//         win.close();
+//     }
+// } );
