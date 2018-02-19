@@ -16,7 +16,7 @@ import { selectAddressBar } from './actions/ui_actions';
 // TODO: Move this // abstract
 import { authFromQueue } from './extensions/safe/network';
 
-const windowArray = [];
+const browserWindowArray = [];
 
 function getNewWindowPosition( mainWindowState )
 {
@@ -88,9 +88,10 @@ const openWindow = ( store ) =>
         authFromQueue();
 
         const webContentsId = mainWindow.webContents.id;
-
-        // TODO: This assumes one BG windows!
-        if ( BrowserWindow.getAllWindows().length === 2 )
+        // global.browserWindowId = webContentsId;
+        // set first browserWindow id upon initial opening.
+        // otherwise, addTab with about:blank
+        if ( browserWindowArray.length === 1 )
         {
             // first tab needs this webContentsId.
             store.dispatch( updateTab( { index: 0, windowId: webContentsId } ) );
@@ -104,15 +105,15 @@ const openWindow = ( store ) =>
 
     mainWindow.on( 'closed', () =>
     {
-        const index = windowArray.indexOf( mainWindow );
+        const index = browserWindowArray.indexOf( mainWindow );
         mainWindow = null;
         if ( index > -1 )
         {
-            windowArray.splice( index, 1 );
+            browserWindowArray.splice( index, 1 );
         }
     } );
 
-    windowArray.push( mainWindow );
+    browserWindowArray.push( mainWindow );
 
     const menuBuilder = new MenuBuilder( mainWindow, openWindow, store );
     menuBuilder.buildMenu();

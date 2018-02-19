@@ -129,6 +129,7 @@ export const handleSafeAuthUrlReception = async ( res ) =>
     {
         throw new Error( 'Response url should be a string' );
     }
+
     let authUrl = null;
     logger.info( 'Received URL response' );
 
@@ -136,6 +137,7 @@ export const handleSafeAuthUrlReception = async ( res ) =>
     {
         authUrl = parseSafeAuthUrl( res );
 
+        logger.info('determined authUrl', authUrl);
         // Q: Do we need this check?
         if ( authUrl.action === 'auth' )
         {

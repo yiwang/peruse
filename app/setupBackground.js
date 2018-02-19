@@ -13,21 +13,11 @@
 import { BrowserWindow } from 'electron';
 import logger from 'logger';
 import path from 'path';
-import { isRunningUnpacked, isRunningDevelopment, isRunningPackaged, PROTOCOLS } from 'appConstants';
-// import { parse as parseURL } from 'url';
-// import pkg from 'appPackage';
-import { configureStore } from './store/configureStore';
+import { isRunningUnpacked, isRunningDevelopment } from 'appConstants';
 
-// const initialState = {};
 let backgroundProcess = null;
 
 const BACKGROUND_PROCESS = path.join( __dirname, 'bg.html' );
-
-// Add middleware from extensions here.
-// const loadMiddlewarePackages = [];
-// const store = configureStore( initialState, loadMiddlewarePackages, true );
-
-// const mainWindow = null;
 
 
 const setupBackground = () =>
@@ -42,7 +32,7 @@ const setupBackground = () =>
             // show           : isRunningUnpacked,
             width: 300,
             height: 450,
-            show: true,
+            show: false,
             frame: false,
             fullscreenable: false,
             resizable: false,
@@ -63,12 +53,15 @@ const setupBackground = () =>
             backgroundProcess.hide()
           }
         })
-
+        // Q. what does the bg matter?
+        // setting client earlier sorts?
+        //
+        // then lets see errororororrsss.
         backgroundProcess.webContents.on( 'did-finish-load', () =>
         {
             logger.info( 'BACKGROUND_PROCESS loaded');
 
-            if( isRunningPackaged || isRunningDevelopment )
+            if( isRunningUnpacked || isRunningDevelopment )
             {
                 backgroundProcess.webContents.openDevTools()
             }

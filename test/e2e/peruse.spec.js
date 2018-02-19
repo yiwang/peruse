@@ -6,9 +6,9 @@ import {removeTrailingSlash} from 'utils/urlHelpers';
 import {
     navigateTo,
     newTab,
-    setToShellWindow
+    setClientToMainBrowserWindow,
+    setClientToBackgroundProcessWindow
 } from './lib/browser-driver';
-
 import { BROWSER_UI, AUTH_UI } from './lib/constants';
 
 jest.unmock('electron')
@@ -44,7 +44,20 @@ describe( 'main window', () =>
     {
         await delay( 10000 )
         await app.start();
+        await setClientToMainBrowserWindow( app );
         await app.client.waitUntilWindowLoaded();
+        // await app.client.pause( 3500 );
+
+        // getOwnerBrowserWindow
+        // getURL
+        // getParentWindow
+        // isVisible
+        console.log(await app)
+        console.log('^^^^^^^^^^^^^^^^^^^^^^^^^app^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^')
+        console.log(await app.client)
+        console.log('^^^^^^^^^^^^^^^^^^^^^^^^^app.client^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^')
+        console.log( await app.browserWindow)
+        console.log('^^^^^^^^^^^^^^^^^^^^^^^^^app.browserWindow^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^')
     } );
 
     afterAll( () =>
@@ -55,21 +68,29 @@ describe( 'main window', () =>
         }
     } );
 
-    test( 'window loaded', async () => await app.browserWindow.isVisible() );
+    test( 'window loaded', async () => {
+        let vis = await app.browserWindow.isVisible();
+        //
+        // console.log('whutbrowser',await app.browserWindow);
+        console.log('whutbrowser url ',await app.browserWindow.getURL());
+        // console.log('whut', await app.client);
+        console.log('vis',vis);
 
-    it( 'DEBUG LOGGING (amend test): should haven\'t any logs in console of main window', async () =>
-    {
-        const { client } = app;
-        const logs = await client.getRenderProcessLogs();
-        // Print renderer process logs
-        logs.forEach( log =>
-        {
-            console.log( log.message );
-            console.log( log.source );
-            console.log( log.level );
-        } );
-        // expect( logs ).toHaveLength( 0 );
-    } );
+        return vis;
+    });
+    // it( 'DEBUG LOGGING (amend test): should haven\'t any logs in console of main window', async () =>
+    // {
+    //     const { client } = app;
+    //     const logs = await client.getRenderProcessLogs();
+    //     // Print renderer process logs
+    //     logs.forEach( log =>
+    //     {
+    //         console.log( log.message );
+    //         console.log( log.source );
+    //         console.log( log.level );
+    //     } );
+    //     // expect( logs ).toHaveLength( 0 );
+    // } );
 
     //
     // it( 'cannot open http:// protocol links', async () =>
@@ -192,7 +213,7 @@ describe( 'main window', () =>
     xit( 'can go backwards', async () =>
     {
         const { client } = app;
-        await setToShellWindow(app);
+        await setClientToMainBrowserWindow(app);
         const tabIndex = await newTab( app );
         await navigateTo( app, 'example.com' );
         await navigateTo( app, 'google.com' );
@@ -211,7 +232,7 @@ describe( 'main window', () =>
     xit( 'can go forwards', async () =>
     {
         const { client } = app;
-        await setToShellWindow(app);
+        await setClientToMainBrowserWindow(app);
         const tabIndex = await newTab( app );
         await navigateTo( app, 'example.com' );
         await navigateTo( app, 'example.org' );
@@ -225,7 +246,7 @@ describe( 'main window', () =>
         //TODO: URL from webview always has trailing slash
         expect( clientUrl ).toBe( 'http://example.com' );
 
-        await setToShellWindow(app);
+        await setClientToMainBrowserWindow(app);
         await client.pause( 500 ); // need to wait a sec for the UI to catch up
         await client.waitForExist( BROWSER_UI.FORWARDS );
 
@@ -243,7 +264,7 @@ describe( 'main window', () =>
     it( 'can close a tab', async() =>
     {
         const { client } = app;
-        await setToShellWindow(app);
+        await setClientToMainBrowserWindow(app);
         const tabIndex = await newTab( app );
 
         await navigateTo( app, 'bbc.com' );
@@ -258,11 +279,11 @@ describe( 'main window', () =>
 
     });
 
-
+    // TODO: Setup spectron spoofer for these menu interactions.
     xtest( 'closes the window', async() =>
     {
         const { client } = app;
-        await setToShellWindow(app);
+        await setClientToMainBrowserWindow(app);
         await client.waitForExist( BROWSER_UI.ADDRESS_INPUT );
         await client.pause( 500 ); // need to wait a sec for the UI to catch up
         await client.click( BROWSER_UI.ADDRESS_INPUT );
@@ -272,5 +293,46 @@ describe( 'main window', () =>
         //rest - to test on ci...
         await client.keys( ['\ue008','\ue009', 'w'] ); // shift + ctrl + w
 
+    } )
+
+    test.only( 'triggers a save for the window state', async() =>
+    {
+        const { client } = app;
+        await setClientToMainBrowserWindow(app);
+        await client.pause( 500 ); // need to wait a sec for the UI to catch up
+
+        await client.waitForExist( BROWSER_UI.SPECTRON_AREA );
+        await client.pause( 500 ); // need to wait a sec for the UI to catch up
+        await client.click( BROWSER_UI.SPECTRON_AREA__SPOOF_SAVE );
+
+        await setClientToBackgroundProcessWindow(app);
+
+        const logs = await client.getRenderProcessLogs();
+
+        const filteredLogs = logs.filter( log =>
+        {
+            // TODO: Unauthorised is a placeholder to see that the action is working.
+            return log.level === 'SEVERE' && log.message.includes('Unauthorised');
+
+        } );
+
+        console.log( filteredLogs , BROWSER_UI.SPECTRON_AREA__SPOOF_READ);
+        expect( filteredLogs ).toHaveLength( 1 );
+
+        // READ does nothign as already set to unauthed.
+
+
+        // await setClientToMainBrowserWindow(app);
+        // await client.click( BROWSER_UI.SPECTRON_AREA__SPOOF_READ );
+        // const logs2 = await client.getRenderProcessLogs();
+        // const filteredLogs2 = logs.filter( log =>
+        // {
+        //     // TODO: Unauthorised is a placeholder to see that the action is working.
+        //     return log.level === 'SEVERE' && log.message.includes('Unauthorised');
+        //
+        // } );
+        //
+        // console.log( filteredLogs2 );
+        // expect( filteredLogs2 ).toHaveLength( 2 );
     } )
 } );

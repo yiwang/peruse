@@ -173,7 +173,6 @@ app.on( 'ready', async () =>
 
     const server = await setupServerVars();
 
-    openWindow( store );
     loadExtensions( server, store );
     startServer( server );
 
@@ -185,7 +184,10 @@ app.on( 'ready', async () =>
     // createTray();
     // createSafeInfoWindow();
 
+    // TODO: This order is important, reversing breaks tests. Why!?
     bgProcessWindow = setupBackground();
+    openWindow( store );
+
 } );
 
 app.on( 'open-url', ( e, url ) =>
