@@ -123,12 +123,12 @@ const openWindow = ( store ) =>
 export default openWindow;
 
 
-// ipcMain.on( 'command:close-window', ( ) =>
-// {
-//     const win = BrowserWindow.getFocusedWindow();
-//
-//     if ( win )
-//     {
-//         win.close();
-//     }
-// } );
+ipcMain.on( 'command:close-window', ( ) =>
+{
+    const win = BrowserWindow.getFocusedWindow();
+
+    if ( win )
+    {
+        win.close();
+    }
+} );

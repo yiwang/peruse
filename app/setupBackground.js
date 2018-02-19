@@ -42,7 +42,7 @@ const setupBackground = () =>
             // show           : isRunningUnpacked,
             width: 300,
             height: 450,
-            show: true,
+            show: false,
             frame: false,
             fullscreenable: false,
             resizable: false,
