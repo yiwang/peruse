@@ -295,7 +295,7 @@ describe( 'main window', () =>
 
     } )
 
-    test.only( 'triggers a save for the window state', async() =>
+    test( 'triggers a save for the window state', async() =>
     {
         const { client } = app;
         await setClientToMainBrowserWindow(app);
