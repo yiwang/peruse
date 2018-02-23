@@ -33,6 +33,7 @@ export default class Login extends Component {
 
   componentWillMount() {
     if (this.props.isAuthorised) {
+        logger.info('@mount >>>>>>>>>>>>>>>>>>>>.not authorisedddddd')
       return this.context.router.push('/');
     }
     if (this.props.error) {
@@ -49,6 +50,8 @@ export default class Login extends Component {
 
   componentWillUpdate(nextProps) {
     if (nextProps.isAuthorised) {
+        logger.info('@update: >>>>>>>>>>>>>>>>>>>>.not authorisedddddd')
+
       return this.context.router.push('/');
     }
   }

@@ -1,8 +1,26 @@
 // following @pfrazee's beaker pattern again here.
-import setupPreloadAPIs from './setupPreloadAPIs';;
+import setupPreloadedSafeAuthAPIs from './setupPreloadAPIs';
+import { ipcRenderer } from 'electron';
+import { configureStore } from 'store/configureStore';
 
-setupPreloadAPIs();
+// TODO This handling needs to be imported via extension apis more seemlessly
 
-window.onerror = function(error, url, line) {
-    ipcRenderer.send('errorInWindow', error);
+const initialState = {};
+
+// Add middleware from extensions here. TODO: this should be be unified somewhere.
+const loadMiddlewarePackages = [];
+const store = configureStore( initialState, loadMiddlewarePackages );
+
+// init();
+
+// store.subscribe( async () =>
+// {
+//     // handlePeruseStoreChanges( store );
+// } );
+
+setupPreloadedSafeAuthAPIs( store );
+
+window.onerror = function ( error, url, line )
+{
+    ipcRenderer.send( 'errorInWindow', error );
 };

@@ -306,8 +306,9 @@ class Authenticator extends SafeLib
                         this.registeredClientHandle = clientHandle;
                         this._pushNetworkState( CONSTANTS.NETWORK_STATUS.CONNECTED );
 
-                        const store = global.mainProcessStore;
-                        store.dispatch( setAppStatus( SAFE.NETWORK_STATE.LOGGED_IN ) );
+                        // const store = global.mainProcessStore;
+                        //TODO: sort thissssss
+                        // store.dispatch( setAppStatus( SAFE.NETWORK_STATE.LOGGED_IN ) );
                         resolve();
                     } ) );
 
@@ -339,9 +340,9 @@ class Authenticator extends SafeLib
         this._pushNetworkState( CONSTANTS.NETWORK_STATUS.DISCONNECTED );
         this.safeLib.auth_free( this.registeredClientHandle );
         this.registeredClientHandle = null;
-
-        const store = global.mainProcessStore;
-        store.dispatch( setAppStatus( SAFE.APP_STATUS.TO_LOGOUT ) );
+        //TODO sort thisss
+        // const store = global.mainProcessStore;
+        // store.dispatch( setAppStatus( SAFE.APP_STATUS.TO_LOGOUT ) );
     }
 
     decodeRequest( uri )

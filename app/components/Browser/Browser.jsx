@@ -9,7 +9,7 @@ import TabBar from 'components/TabBar';
 import Notifier from 'components/Notifier';
 import TabContents from 'components/TabContents';
 import styles from './browser.css';
-import setupAuthHandling from 'extensions/safe/authIPCHandling';
+// import setupAuthHandling from 'extensions/safe/authIPCHandling';
 import logger from 'logger';
 
 export default class Browser extends Component
@@ -62,7 +62,7 @@ export default class Browser extends Component
         const addressBar = this.address;
 
         const theBrowser = this;
-        setupAuthHandling( addLocalNotification, clearNotification );
+        // setupAuthHandling( addLocalNotification, clearNotification );
 
         // this is mounted but its not show?
         this.setState( { windowId: remote.getCurrentWebContents().id } );

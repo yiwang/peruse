@@ -1,6 +1,7 @@
-import { ipcRenderer, remote } from 'electron';
+import { ipcMain } from 'electron';
 import logger from 'logger';
-
+import * as notificationActions from 'actions/notification_actions';
+import { inRendererProcess } from 'appConstants';
 let isSafeAppAuthenticating = false;
 let safeAuthNetworkState = -1;
 const safeAuthData = null;
@@ -20,7 +21,7 @@ export const REQ_TYPES = {
 
 export const handleSafeAuthAuthentication = ( req, type ) =>
 {
-    ipcRenderer.send( 'decryptRequest', req, type || CLIENT_TYPES.DESKTOP );
+    // ipcMain.send( 'decryptRequest', req, type || CLIENT_TYPES.DESKTOP );
 };
 
 
@@ -30,13 +31,13 @@ function authDecision( isAllowed, data, reqType )
 
     if ( reqType === REQ_TYPES.AUTH )
     {
-        return ipcRenderer.send( 'registerAuthDecision', data, isAllowed );
+        // return ipcMain.send( 'registerAuthDecision', data, isAllowed );
     }
     else if ( reqType === REQ_TYPES.CONTAINER )
     {
-        return ipcRenderer.send( 'registerContainerDecision', data, isAllowed );
+        // return ipcMain.send( 'registerContainerDecision', data, isAllowed );
     }
-    ipcRenderer.send( 'registerSharedMDataDecision', data, isAllowed );
+    // ipcMain.send( 'registerSharedMDataDecision', data, isAllowed );
 }
 
 const addAuthNotification = ( data, app, addNotification, clearNotification, ignoreRequest ) =>
@@ -77,18 +78,23 @@ const addAuthNotification = ( data, app, addNotification, clearNotification, ign
  * @param  {[type]} clearNotification [description]
  * @return {[type]}                   [description]
  */
-const setupAuthHandling = ( addNotification, clearNotification ) =>
+const setupAuthHandling = ( store ) =>
 {
+    logger.verbose('setting up handling of auth in render?:', inRendererProcess)
+    const  addNotification = payload => store.dispatch( notificationActions.addNotification( payload ) )
+    const  clearNotification = () => store.dispatch( notificationActions.clearNotification( ) )
+    // clearNotification
     const ignoreRequest = ( data ) =>
     {
-        ipcRenderer.send( 'skipAuthRequest', true );
+        logger.info('replace these ipcMain.send calls')
+        // ipcMain.send( 'skipAuthRequest', true );
         clearNotification();
     };
 
     // safe app plugin
-    ipcRenderer.send( 'registerSafeApp' );
+    // ipcMain.send( 'registerSafeApp' );
 
-    ipcRenderer.on( 'webClientAuthReq', ( event, req ) =>
+    ipcMain.on( 'webClientAuthReq', ( event, req ) =>
     {
         logger.info( 'on.....webClientAuthReq' );
         handleSafeAuthAuthentication( req, CLIENT_TYPES.WEB );
@@ -96,13 +102,13 @@ const setupAuthHandling = ( addNotification, clearNotification ) =>
 
 
     // safe authenticator plugin
-    ipcRenderer.send( 'registerSafeNetworkListener' );
-    ipcRenderer.send( 'registerOnAuthReq' );
-    ipcRenderer.send( 'registerOnContainerReq' );
-    ipcRenderer.send( 'registerOnSharedMDataReq' );
-    ipcRenderer.send( 'registerOnReqError' );
+    // ipcMain.send( 'registerSafeNetworkListener' );
+    // ipcMain.send( 'registerOnAuthReq' );
+    // ipcMain.send( 'registerOnContainerReq' );
+    // ipcMain.send( 'registerOnSharedMDataReq' );
+    // ipcMain.send( 'registerOnReqError' );
 
-    ipcRenderer.on( 'onNetworkStatus', ( event, status ) =>
+    ipcMain.on( 'onNetworkStatus', ( event, status ) =>
     {
         logger.info( 'on.....onNetworkStatus' );
         safeAuthNetworkState = status;
@@ -120,7 +126,7 @@ const setupAuthHandling = ( addNotification, clearNotification ) =>
         // }
     } );
 
-    ipcRenderer.on( 'onAuthReq', ( event, data ) =>
+    ipcMain.on( 'onAuthReq', ( event, data ) =>
     {
         logger.verbose( 'onAuthReq triggered' );
         const app = data.authReq.app;
@@ -128,7 +134,7 @@ const setupAuthHandling = ( addNotification, clearNotification ) =>
         addAuthNotification( data, app, addNotification, clearNotification, ignoreRequest );
     } );
 
-    ipcRenderer.on( 'onContainerReq', ( event, data ) =>
+    ipcMain.on( 'onContainerReq', ( event, data ) =>
     {
         logger.verbose( 'onContainerReq triggered' );
         if ( data )
@@ -138,7 +144,7 @@ const setupAuthHandling = ( addNotification, clearNotification ) =>
         }
     } );
 
-    ipcRenderer.on( 'onSharedMDataReq', ( event, data ) =>
+    ipcMain.on( 'onSharedMDataReq', ( event, data ) =>
     {
         logger.verbose( 'onSharedMDataReq triggered' );
 
@@ -150,55 +156,55 @@ const setupAuthHandling = ( addNotification, clearNotification ) =>
         }
     } );
 
-    ipcRenderer.on( 'onAuthDecisionRes', ( event, res ) =>
+    ipcMain.on( 'onAuthDecisionRes', ( event, res ) =>
     {
         logger.info( 'on.....onAuthDecisionRes', res );
 
-        const browserAuthReqUri = remote.getGlobal( 'browserAuthReqUri' );
-        const peruseRequestUri = remote.getGlobal( 'peruseRequestUri' );
+        // const browserAuthReqUri = remote.getGlobal( 'browserAuthReqUri' );
+        // const peruseRequestUri = remote.getGlobal( 'peruseRequestUri' );
 
         // if( res.uri === browserAuthReqUri || res.uri === peruseRequestUri )
         // {
-        //     // ipcRenderer.send('browserAuthenticated', res.res, res.uri === browserAuthReqUri )
+        //     // ipcMain.send('browserAuthenticated', res.res, res.uri === browserAuthReqUri )
         // }
 
         isSafeAppAuthenticating = false;
         if ( res.type === CLIENT_TYPES.WEB )
         {
-            ipcRenderer.send( 'webClientAuthRes', res );
+            event.sender.send( 'webClientAuthRes', res );
         }
     } );
 
-    ipcRenderer.on( 'onContDecisionRes', ( event, res ) =>
+    ipcMain.on( 'onContDecisionRes', ( event, res ) =>
     {
         logger.info( 'on.....onContDecisionRes', res );
         isSafeAppAuthenticating = false;
         if ( res.type === CLIENT_TYPES.WEB )
         {
-            ipcRenderer.send( 'webClientContainerRes', res );
+            event.sender.send( 'webClientContainerRes', res );
         }
     } );
 
-    ipcRenderer.on( 'onUnAuthDecisionRes', ( event, res ) =>
+    ipcMain.on( 'onUnAuthDecisionRes', ( event, res ) =>
     {
         logger.info( 'on.....onUnAuthDecisionRes', res );
         if ( res.type === CLIENT_TYPES.WEB )
         {
-            ipcRenderer.send( 'webClientAuthRes', res );
+            event.sender.send( 'webClientAuthRes', res );
         }
     } );
 
-    ipcRenderer.on( 'onSharedMDataRes', ( event, res ) =>
+    ipcMain.on( 'onSharedMDataRes', ( event, res ) =>
     {
         logger.info( 'on.....onSharedMDataRes', res );
         isSafeAppAuthenticating = false;
         if ( res.type === CLIENT_TYPES.WEB )
         {
-            ipcRenderer.send( 'webClientSharedMDataRes', res );
+            event.sender.send( 'webClientSharedMDataRes', res );
         }
     } );
 
-    ipcRenderer.on( 'onAuthResError', ( event, res ) =>
+    ipcMain.on( 'onAuthResError', ( event, res ) =>
     {
         logger.info( 'on.....onAuthResError', res );
         isSafeAppAuthenticating = false;
@@ -208,16 +214,16 @@ const setupAuthHandling = ( addNotification, clearNotification ) =>
         }
         if ( res.type === CLIENT_TYPES.WEB )
         {
-            ipcRenderer.send( 'webClientErrorRes', res );
+            event.sender.send( 'webClientErrorRes', res );
         }
     } );
 
-    ipcRenderer.on( 'onUnAuthResError', ( event, res ) =>
+    ipcMain.on( 'onUnAuthResError', ( event, res ) =>
     {
         logger.info( 'on.....onUnAuthResError' );
         if ( res.type === CLIENT_TYPES.WEB )
         {
-            ipcRenderer.send( 'webClientErrorRes', res );
+            event.sender.send( 'webClientErrorRes', res );
         }
     } );
 };

@@ -2,11 +2,11 @@ import path from 'path';
 
 export default {
   devtool: 'cheap-module-source-map',
-  entry: path.resolve(__dirname, 'src/api/index.js'),
+  entry: path.resolve(__dirname, 'index.js'),
   output: {
     libraryTarget: 'commonjs2',
     path: path.join(__dirname, 'dist'),
-    filename: 'api.js'
+    filename: 'dist/api.js'
   },
   module: {
     loaders: [

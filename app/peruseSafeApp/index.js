@@ -6,6 +6,7 @@ import { initializeApp } from '@maidsafe/safe-node-app';
 import { APP_INFO, CONFIG, SAFE, PROTOCOLS } from 'appConstants';
 import * as peruseAppActions from 'actions/peruse_actions';
 import * as notificationActions from 'actions/notification_actions';
+// import * as remoteCallActions from 'actions/remoteCall_actions';
 import logger from 'logger';
 
 const authingStates = [
@@ -28,6 +29,14 @@ const handlePeruseStoreChanges = ( store ) =>
     manageReadStateActions( store );
     manageAuthorisationActions( store );
 }
+
+
+
+let cachedRemoteCallArray = [];
+// things underway
+let callingArray = [];
+
+
 
 const requestPeruseAppAuthentication = async () =>
 {

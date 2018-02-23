@@ -4,7 +4,7 @@ import logger from 'logger';
 import { parse as parseURL } from 'url';
 import { addNotification, clearNotification } from 'actions/notification_actions';
 import { callIPC, setIPCStore } from '../ffi/ipc';
-import ipc from '../ffi/ipc';
+// import ipc from '../ffi/ipc';
 import AUTH_CONSTANTS from '../auth-constants';
 
 const queue = [];
@@ -12,7 +12,7 @@ let appObj;
 let store;
 let browserAuthReqUri;
 
-ipc();
+// ipc();
 
 export const authFromQueue = async () =>
 {

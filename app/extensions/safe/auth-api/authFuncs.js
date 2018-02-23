@@ -1,22 +1,6 @@
 import authenticator from '../ffi/authenticator';
 import sysUri from '../ffi/sys_uri';
 import CONSTANTS from '../auth-constants';
-import logger from 'logger';
-export const manifest = {
-  setNetworkListener: 'async',
-  setAppListUpdateListener: 'async',
-  getNetworkState: 'sync',
-  getAuthenticatorHandle: 'sync',
-  setReAuthoriseState: 'sync',
-  getLibStatus: 'sync',
-  logout: 'sync',
-  login: 'promise',
-  createAccount: 'promise',
-  getAuthorisedApps: 'promise',
-  getAccountInfo: 'promise',
-  revokeApp: 'promise',
-  reconnect: 'promise'
-};
 
 export const setNetworkListener = (cb) =>
   authenticator.setListener(CONSTANTS.LISTENER_TYPES.NW_STATE_CHANGE, cb);
@@ -26,11 +10,7 @@ export const setAppListUpdateListener = (cb) =>
 
 export const getNetworkState = () => ({ state: authenticator.networkState });
 
-export const getAuthenticatorHandle = () =>
-    {
-        logger.info('get auth handle being calllledddddd');
-        return authenticator.registeredClientHandle
-    };
+export const getAuthenticatorHandle = () => (authenticator.registeredClientHandle);
 
 export const reconnect = () => authenticator.reconnect();
 

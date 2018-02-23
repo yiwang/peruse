@@ -24,14 +24,18 @@ import loadExtensions from './extensions';
 import { configureStore } from './store/configureStore';
 
 // TODO: Deprecate this in favour of redux actions
-import handleCommands from './commandHandling';
+// import handleCommands from './commandHandling';
 
-import { setupWebAPIs } from './webAPIs';
+//TODO: Enable webAPIs
+// import { setupWebAPIs } from './webAPIs';
 
 // TODO: This should be handled in an extensible fashion
 import { handleSafeAuthUrlReception } from './extensions/safe/network';
 import { addTab, closeActiveTab } from 'actions/tabs_actions';
 import { setupServerVars, startServer } from './server';
+
+// import setupAuthHandling from 'extensions/safe/authIPCHandling';
+
 
 import { createSafeInfoWindow, createTray } from './setupTray';
 
@@ -163,13 +167,16 @@ app.on( 'ready', async () =>
 
     const server = await setupServerVars();
 
+    // setupAuthHandling( store );
+
+
     loadExtensions( server, store );
     startServer( server );
 
 
-    setupWebAPIs();
+    // setupWebAPIs();
 
-    handleCommands( store );
+    // handleCommands( store );
 
     // TODO: Reenable for adding Safe Network popup
     // createTray();

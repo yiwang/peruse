@@ -45,6 +45,7 @@ function getNewWindowPosition( mainWindowState )
 
 const openWindow = ( store ) =>
 {
+    logger.info('opening window>>>>>>>>>>>>>>>>')
     const mainWindowState = windowStateKeeper( {
         defaultWidth  : 2048,
         defaultHeight : 1024
@@ -73,9 +74,10 @@ const openWindow = ( store ) =>
 
     // @TODO: Use 'ready-to-show' event
     //        https://github.com/electron/electron/blob/master/docs/api/browser-window.md#using-ready-to-show-event
-
+    logger.info('loadurl passssed')
     mainWindow.webContents.on( 'did-finish-load', () =>
     {
+        logger.info('finished load window>>>>>>>>>>>>>>>>')
         if ( !mainWindow )
         {
             throw new Error( '"mainWindow" is not defined' );
@@ -114,7 +116,7 @@ const openWindow = ( store ) =>
     } );
 
     browserWindowArray.push( mainWindow );
-
+    logger.info('building menu next')
     const menuBuilder = new MenuBuilder( mainWindow, openWindow, store );
     menuBuilder.buildMenu();
 };

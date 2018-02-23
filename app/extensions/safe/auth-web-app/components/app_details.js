@@ -45,6 +45,7 @@ export default class AppDetails extends Component {
 
   componentWillUpdate(nextProps) {
     if (!nextProps.isAuthorised) {
+        console.log('WE ARE NOT AUTHORISEDD????""""""""""')
       return this.context.router.push('/login');
     }
   }
@@ -84,6 +85,7 @@ export default class AppDetails extends Component {
     const appId = location.query.id;
     const appIndex = location.query.index;
     if (!(appId && appIndex)) {
+        console.log('^^^^^^^^^^^^^^no app id or indexxxx')
       this.props.router.push('/');
       return <span>{''}</span>;
     }
