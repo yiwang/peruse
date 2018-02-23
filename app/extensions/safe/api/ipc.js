@@ -1,7 +1,8 @@
 import logger from 'logger';
+import { inRendererProcess} from 'constants';
 
 /* eslint-disable import/no-extraneous-dependencies, import/no-unresolved */
-const ipcMain = require('electron').ipcMain; // electron deps will be avaible inside browser
+const ipcRenderer = require('electron').ipcRenderer; // electron deps will be avaible inside browser
 /* eslint-enable import/no-extraneous-dependencies, import/no-unresolved */
 const { genRandomString, freePageObjs } = require('./helpers');
 
@@ -11,6 +12,7 @@ let ipcEvent = null;
 // Until ipcEvent is ready, we need to keep reqs in a queue
 const pendingReqs = [];
 
+logger.verbose('Starting IPC in Renderer', inRendererProcess );
 class AuthRequest {
   constructor(uri, isUnRegistered, cb) {
     this.id = genRandomString();
@@ -60,26 +62,26 @@ const authRes = (event, response) => {
   }
 };
 
-ipcMain.on('onTabRemove', (event, safeAppGroupId) => {
+ipcRenderer.on('onTabRemove', (event, safeAppGroupId) => {
   freePageObjs(safeAppGroupId);
 });
 
-ipcMain.on('onTabUpdate', (event, safeAppGroupId) => {
+ipcRenderer.on('onTabUpdate', (event, safeAppGroupId) => {
   freePageObjs(safeAppGroupId);
 });
 
-ipcMain.on('registerSafeApp', (event) => {
+ipcRenderer.on('registerSafeApp', (event) => {
   ipcEvent = event;
   sendPendingReqs();
 });
 
-ipcMain.on('webClientContainerRes', authRes);
+ipcRenderer.on('webClientContainerRes', authRes);
 
-ipcMain.on('webClientAuthRes', authRes);
+ipcRenderer.on('webClientAuthRes', authRes);
 
-ipcMain.on('webClientSharedMDataRes', authRes);
+ipcRenderer.on('webClientSharedMDataRes', authRes);
 
-ipcMain.on('webClientErrorRes', (event, res) => {
+ipcRenderer.on('webClientErrorRes', (event, res) => {
   // handle Error
   const err = res.error;
   if (err && err.toLowerCase() === 'unauthorised') {

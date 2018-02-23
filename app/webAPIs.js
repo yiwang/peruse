@@ -2,15 +2,16 @@
 import { ipcMain } from 'electron';
 import logger from 'logger';
 import rpc from 'pauls-electron-rpc';
-import { safeAuthApi } from 'extensions/safe/auth-api';
-import safeApis from 'extensions/safe/api';
+// import { safeAuthApi } from 'extensions/safe/auth-api';
+// import safeApis from 'extensions/safe/api';
 
 // globals
 const WITH_CALLBACK_TYPE_PREFIX = '_with_cb_';
 const WITH_ASYNC_CALLBACK_TYPE_PREFIX = '_with_async_cb_';
 const EXPORT_AS_STATIC_OBJ_PREFIX = '_export_as_static_obj_';
 
-const allAPIs = [safeAuthApi, safeApis];
+// const allAPIs = [safeAuthApi, safeApis];
+const allAPIs = [];
 
 // fetch a complete listing of the plugin info
 // - each plugin module can export arrays of values. this is a helper to create 1 list of all of them

@@ -5,12 +5,12 @@ import registerSafeProtocol from './protocols/safe';
 
 import registerSafeAuthProtocol from './protocols/safe-auth';
 
-import { initAnon, initMock } from './network';
+// import { initAnon, initMock } from './network';
 
-import * as authAPI from './auth-api';
+// import * as authAPI from './auth-api';
 
 import blockNonSAFERequests from './blockNonSafeReqs';
-import handleMainStoreChanges from './network/handleStoreChanges';
+// import handleMainStoreChanges from './network/handleStoreChanges';
 
 
 const init = async ( store ) =>
@@ -20,35 +20,35 @@ const init = async ( store ) =>
     registerSafeAuthProtocol();
 
 
-    //TODO: Curerently this is duplicated in BG and netowrk....
-    try
-    {
-        // setup auth
-        authAPI.ffi.ffiLoader.loadLibrary();
-
-        // dont do this inside if auth ffi as circular dep
-        if ( isRunningProduction )
-        {
-            await initAnon( store );
-        }
-        else
-        {
-            await initMock( store );
-        }
-    }
-    catch ( e )
-    {
-        logger.info( 'Problems initing SAFE extension' );
-        logger.info( e.message );
-        logger.info( e );
-    }
+    // //TODO: Curerently this is duplicated in BG and netowrk....
+    // try
+    // {
+    //     // setup auth
+    //     authAPI.ffi.ffiLoader.loadLibrary();
+    //
+    //     // dont do this inside if auth ffi as circular dep
+    //     if ( isRunningProduction )
+    //     {
+    //         await initAnon( store );
+    //     }
+    //     else
+    //     {
+    //         await initMock( store );
+    //     }
+    // }
+    // catch ( e )
+    // {
+    //     logger.info( 'Problems initing SAFE extension' );
+    //     logger.info( e.message );
+    //     logger.info( e );
+    // }
 
     blockNonSAFERequests();
 
-    store.subscribe( async () =>
-    {
-        handleMainStoreChanges( store );
-    } );
+    // store.subscribe( async () =>
+    // {
+    //     handleMainStoreChanges( store );
+    // } );
 };
 
 // const middleware = store => next => action =>
