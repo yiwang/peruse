@@ -19,4 +19,4 @@ window.peruseNav = ( location ) =>
 };
 
 
-setupPreloadAPIs( `${PROTOCOLS.SAFE_AUTH}:` );
+// setupPreloadAPIs( `${PROTOCOLS.SAFE_AUTH}:` );

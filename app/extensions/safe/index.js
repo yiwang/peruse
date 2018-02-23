@@ -2,7 +2,7 @@ import logger from 'logger';
 import { isRunningProduction, SAFE } from 'appConstants';
 import setupRoutes from './server-routes';
 import registerSafeProtocol from './protocols/safe';
-
+import hireABouncer from './bouncer';
 import registerSafeAuthProtocol from './protocols/safe-auth';
 
 // import { initAnon, initMock } from './network';
@@ -15,6 +15,7 @@ import blockNonSAFERequests from './blockNonSafeReqs';
 
 const init = async ( store ) =>
 {
+    hireABouncer();
     logger.info( 'Registering SAFE Network Protocols' );
     registerSafeProtocol();
     registerSafeAuthProtocol();

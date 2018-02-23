@@ -1,17 +1,17 @@
 // credit to @pfrazee's beaker plugin.js implementation!
-import { ipcMain } from 'electron';
+// import { ipcRenderer } from 'electron';
 import logger from 'logger';
-import rpc from 'pauls-electron-rpc';
-// import { safeAuthApi } from 'extensions/safe/auth-api';
-// import safeApis from 'extensions/safe/api';
+import exportAPI from './exportAPIs';
+import { safeAuthApi } from './auth-api';
+import safeApis from './api';
 
 // globals
 const WITH_CALLBACK_TYPE_PREFIX = '_with_cb_';
 const WITH_ASYNC_CALLBACK_TYPE_PREFIX = '_with_async_cb_';
 const EXPORT_AS_STATIC_OBJ_PREFIX = '_export_as_static_obj_';
 
-// const allAPIs = [safeAuthApi, safeApis];
-const allAPIs = [];
+const allAPIs = [safeAuthApi, safeApis];
+// const allAPIs = [];
 
 // fetch a complete listing of the plugin info
 // - each plugin module can export arrays of values. this is a helper to create 1 list of all of them
@@ -55,36 +55,36 @@ export function getAllInfo( key )
     return caches[key];
 }
 
-const setupIpcListener = () =>
-{
-    ipcMain.on( 'get-web-api-manifests', ( event, scheme ) =>
-    {
-        // hardcode the beaker: scheme, since that's purely for internal use
-        // if ( scheme == 'safe:' )
-        // {
-        //     const protos = {
-        //         // beakerBrowser,
-        //         // beakerBookmarks,
-        //         // beakerDownloads,
-        //         // beakerHistory,
-        //         // beakerSitedata
-        //     };
-        //     event.returnValue = protos;
-        //     return;
-        // }
-
-        const manifest = getWebAPIManifests( scheme );
-
-        // for everything else, we'll use the plugins
-        event.returnValue = manifest;
-    } );
-};
+// const setupIpcListener = () =>
+// {
+//     ipcRenderer.on( 'get-web-api-manifests', ( event, scheme ) =>
+//     {
+//         // hardcode the beaker: scheme, since that's purely for internal use
+//         // if ( scheme == 'safe:' )
+//         // {
+//         //     const protos = {
+//         //         // beakerBrowser,
+//         //         // beakerBookmarks,
+//         //         // beakerDownloads,
+//         //         // beakerHistory,
+//         //         // beakerSitedata
+//         //     };
+//         //     event.returnValue = protos;
+//         //     return;
+//         // }
+//
+//         const manifest = getWebAPIManifests( scheme );
+//
+//         // for everything else, we'll use the plugins
+//         event.returnValue = manifest;
+//     } );
+// };
 
 
 // setup all web APIs
 export function setupWebAPIs()
 {
-    setupIpcListener();
+    // setupIpcListener();
     getAllInfo( 'webAPIs' ).forEach( api =>
     {
         // run the module's protocol setup

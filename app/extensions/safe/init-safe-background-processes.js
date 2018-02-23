@@ -1,18 +1,20 @@
 import logger from 'logger';
 import { isRunningProduction, SAFE } from 'appConstants';
-import ipc from '../ffi/ipc';
+// import ipc from './ffi/ipc';
 
 import { initAnon, initMock } from './network';
 
 import * as authAPI from './auth-api';
+import { setupWebAPIs } from './safeWebAPIs';
 
-import handleMainStoreChanges from './network/handleStoreChanges';
+// import handleMainStoreChanges from './network/handleStoreChanges';
 
 
 const init = async ( store ) =>
 {
     logger.info( 'Init of bg process.' );
-    ipc();
+    // ipc();
+    setupWebAPIs();
 
     //TODO: Curerently this is duplicated in BG and netowrk....
     try

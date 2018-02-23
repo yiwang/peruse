@@ -183,7 +183,7 @@ app.on( 'ready', async () =>
     // createSafeInfoWindow();
 
     // TODO: This order is important, reversing breaks tests. Why!?
-    // bgProcessWindow = setupBackground();
+    bgProcessWindow = setupBackground();
     openWindow( store );
 
 } );

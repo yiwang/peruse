@@ -2,7 +2,7 @@
 
 import logger from 'logger';
 import { configureStore } from 'store/configureStore';
-
+import { init } from  'extensions/safe/init-safe-background-processes';
 // TODO This handling needs to be imported via extension apis more seemlessly
 import handlePeruseStoreChanges from './peruseSafeApp';
 
@@ -12,6 +12,7 @@ const initialState = {};
 const loadMiddlewarePackages = [];
 const store = configureStore( initialState, loadMiddlewarePackages );
 
+init();
 
 store.subscribe( async () =>
 {
