@@ -2,6 +2,8 @@
 import { ipcRenderer, webFrame } from 'electron';
 import rpc from 'pauls-electron-rpc';
 import pkg from 'appPackage';
+import safe from '@maidsafe/safe-node-app';
+
 // import log from '   electron-log';
 // it would be better to import this from package.json
 const VERSION = pkg.version;
@@ -48,6 +50,7 @@ const readableToAsyncCallback = ( rpcAPI, safeAppGroupId ) =>
 // method which will populate window with the APIs deemed appropriate for the protocol
 const setupPreload = () =>
 {
+
     // mark the safe protocol as 'secure' to enable all DOM APIs
     // webFrame.registerURLSchemeAsSecure('safe');
     window[ pkg.name ] = { version: VERSION };
@@ -103,6 +106,9 @@ const setupPreload = () =>
 
         window[k] = Object.assign( rpc.importAPI( k, fnsToImport, { timeout: false } ), staticObjs, fnsWithCallback, fnsWithAsyncCallback );
     } );
+
+    window.safeTest = safe;
+
 }
 
 
