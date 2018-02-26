@@ -58,7 +58,7 @@ const manageCalls = (store) =>
             logger.info('WE GOT A CALL', c);
             if( !c.replyArgs )
             {
-                store.dispatch( remoteCallActions.updateRemoteCall({ ...c, replyArgs: ['boom']}) );
+                store.dispatch( remoteCallActions.updateRemoteCall({ ...c, replyArgs: ['boom'], done: true }) );
             }
         })
         // if completed? remove... ? if updated with 'done', remove?

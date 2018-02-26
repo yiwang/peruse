@@ -125,7 +125,7 @@ const setupPreloadAPIs = ( store ) =>
 
     const listeners = [];
 
-    window.testAPI = (  ) =>
+    window.testAPI = ( ) => new Promise( ( resolve, reject ) =>
     {
         const callId = Math.random().toString( 36 );
 
@@ -136,23 +136,32 @@ const setupPreloadAPIs = ( store ) =>
             }
         ) );
 
-        //we make a listener for this func...
-        let listener = store.subscribe( async () =>
-        {
-            const state = store.getState();
-            const calls = state.remoteCalls;
-            console.log('store channngeedddd', calls)
-            if( calls && calls.length && calls[0].replyArgs )
-            {
-                console.log('GOT SOME DATAAA', calls[0].replyArgs)
-                logger.info('GOT SOME DATAAA', calls[0].replyArgs)
-                listener = null;
-            }
-            // handlePeruseStoreChanges( store );
-        } );
+        addListenerForCallId( store, callId, resolve, reject );
 
-        listeners.push( listener );
-    }
+
+        // listeners.push( listener );
+    } );
+}
+
+
+const addListenerForCallId = ( store, callId, resolve, reject ) =>
+{
+    //we make a listener for this func...
+    let listener = store.subscribe( async () =>
+    {
+        const state = store.getState();
+        const calls = state.remoteCalls;
+        console.log('store channngeedddd', calls)
+        if( calls && calls.length && calls[0].replyArgs )
+        {
+            console.log('GOT SOME DATAAA', calls[0].replyArgs)
+            logger.info('GOT SOME DATAAA', calls[0].replyArgs)
+            listener = null;
+
+            resolve( calls[0].replyArgs )
+        }
+        // handlePeruseStoreChanges( store );
+    }  );
 }
 
 export default setupPreloadAPIs;
