@@ -137,9 +137,6 @@ const setupPreloadAPIs = ( store ) =>
         ) );
 
         addListenerForCallId( store, callId, resolve, reject );
-
-
-        // listeners.push( listener );
     } );
 }
 
@@ -151,14 +148,21 @@ const addListenerForCallId = ( store, callId, resolve, reject ) =>
     {
         const state = store.getState();
         const calls = state.remoteCalls;
-        console.log('store channngeedddd', calls)
-        if( calls && calls.length && calls[0].replyArgs )
+        console.log('store channngeedddd', calls );
+
+        let call = calls.find( c => c.id === callId );
+
+        if( call.done )
         {
-            console.log('GOT SOME DATAAA', calls[0].replyArgs)
-            logger.info('GOT SOME DATAAA', calls[0].replyArgs)
+            console.log('GOT SOME DATAAA', call.replyArgs)
+            logger.info('GOT SOME DATAAA', call.replyArgs)
             listener = null;
 
             resolve( calls[0].replyArgs )
+        }
+        else if( call.error )
+        {
+            reject( e )
         }
         // handlePeruseStoreChanges( store );
     }  );
