@@ -18,3 +18,7 @@ store.subscribe( async () =>
 {
     handlePeruseStoreChanges( store );
 } );
+
+window.onerror = function(error, url, line) {
+    logger.error('errorInWindow', error);
+};

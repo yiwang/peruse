@@ -136,14 +136,13 @@ const setupPreloadAPIs = ( store ) =>
             }
         ) );
 
-        addListenerForCallId( store, callId, resolve, reject );
+        addListenerForCall( store, callId, resolve, reject );
     } );
 }
 
 
-const addListenerForCallId = ( store, callId, resolve, reject ) =>
+const addListenerForCall = ( store, callId, resolve, reject ) =>
 {
-    //we make a listener for this func...
     let listener = store.subscribe( async () =>
     {
         const state = store.getState();
