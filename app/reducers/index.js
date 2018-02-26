@@ -5,14 +5,16 @@ import bookmarks from './bookmarks';
 import notifications from './notifications';
 import tabs from './tabs';
 import peruseApp from './peruseApp';
+import remoteCalls from './remoteCalls';
 import ui from './ui';
 
 const rootReducer = combineReducers( {
     bookmarks,
     notifications,
-    routing,
-    tabs,
     peruseApp,
+    routing,
+    remoteCalls,
+    tabs,
     ui
 } );
 

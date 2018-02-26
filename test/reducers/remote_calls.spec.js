@@ -1,6 +1,6 @@
 /* eslint-disable func-names */
-import remote_calls from 'reducers/remote_calls';
-import { TYPES } from 'actions/remote_call_actions';
+import remoteCalls from 'reducers/remoteCalls';
+import { TYPES } from 'actions/remoteCall_actions';
 import initialState from 'reducers/initialAppState';
 
 describe( 'notification reducer', () =>
@@ -13,7 +13,7 @@ describe( 'notification reducer', () =>
 
     it( 'should return the initial state', () =>
     {
-        expect( remote_calls( undefined, {} ) ).toEqual( initialState.remote_calls );
+        expect( remoteCalls( undefined, {} ) ).toEqual( initialState.remoteCalls );
     } );
 
     describe( 'ADD_REMOTE_CALL', () =>
@@ -21,7 +21,7 @@ describe( 'notification reducer', () =>
         it( 'should handle adding a remote call', () =>
         {
             expect(
-                remote_calls( {}, {
+                remoteCalls( {}, {
                     type    : TYPES.ADD_REMOTE_CALL,
                     payload : aCall
                 } )
@@ -34,7 +34,7 @@ describe( 'notification reducer', () =>
         it( 'should handle removing a remote call', () =>
         {
             expect(
-                remote_calls( [ {id: 'unimportant'}, aCall], {
+                remoteCalls( [ {id: 'unimportant'}, aCall], {
                     type    : TYPES.REMOVE_REMOTE_CALL,
                     payload:  aCall
                 } )
@@ -47,7 +47,7 @@ describe( 'notification reducer', () =>
         it( 'should handle updating a call', () =>
         {
             expect(
-                remote_calls( [aCall ], {
+                remoteCalls( [aCall ], {
                     type    : TYPES.UPDATE_REMOTE_CALL,
                     payload: {
                         id: 'A',
