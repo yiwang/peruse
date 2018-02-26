@@ -1,5 +1,5 @@
 // following @pfrazee's beaker pattern again here.
-import setupPreloadAPIs from './setupPreloadAPIs';;
+import setupPreloadAPIs, { setupPreloadedSafeAPIs } from './setupPreloadAPIs';;
 
 import { configureStore } from 'store/configureStore';
 // import { init } from  'extensions/safe/init-safe-background-processes';
@@ -19,7 +19,7 @@ const store = configureStore( initialState, loadMiddlewarePackages );
 //     // handlePeruseStoreChanges( store );
 // } );
 
-
+setupPreloadedSafeAPIs( store );
 setupPreloadAPIs( store );
 
 window.onerror = function(error, url, line) {
