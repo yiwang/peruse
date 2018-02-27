@@ -4,14 +4,16 @@
 import pkg from 'appPackage';
 import logger from 'logger';
 import * as remoteCallActions from 'actions/remoteCall_actions';
-import safe  from '@maidsafe/safe-node-app';
+// import { safeAuthApi } from 'extensions/safe/auth-api'
+import safe from '@maidsafe/safe-node-app';
 import { PROTOCOLS } from 'appConstants';
 // import
+import { manifest as authManifest } from 'extensions/safe/auth-api/manifest'
 
 const VERSION = pkg.version;
-const WITH_CALLBACK_TYPE_PREFIX = '_with_cb_';
-const WITH_ASYNC_CALLBACK_TYPE_PREFIX = '_with_async_cb_';
-const EXPORT_AS_STATIC_OBJ_PREFIX = '_export_as_static_obj_';
+// const WITH_CALLBACK_TYPE_PREFIX = '_with_cb_';
+// const WITH_ASYNC_CALLBACK_TYPE_PREFIX = '_with_async_cb_';
+// const EXPORT_AS_STATIC_OBJ_PREFIX = '_export_as_static_obj_';
 
 
 
@@ -58,15 +60,26 @@ const EXPORT_AS_STATIC_OBJ_PREFIX = '_export_as_static_obj_';
 // // this keeps it flexxx.....
 //
 // // method which will populate window with the APIs deemed appropriate for the protocol
+window.eval = global.eval = function () {
+  throw new Error(`Sorry, this app does not support window.eval().`)
+}
+
 export const setupPreloadedSafeAPIs = ( store, hasAuth ) =>
 {
-    window.safeApp = safe;
+    window.safeApp = { ...safe, fromAuthURI: null };
+
+
+    // safe = null;
     // mark the safe protocol as 'secure' to enable all DOM APIs
     // webFrame.registerURLSchemeAsSecure('safe');
     window[ pkg.name ] = { version: VERSION };
 
+    logger.info('SETTING UP PRELOADED SAFEEFEFESSSSS')
     if( window.location.protocol === PROTOCOLS.SAFE_AUTH )
     {
+        logger.info('auth api setup=================', authManifest)
+        // we need the auth apis.
+        // logger.info( safeAuthApi.manifest );
 
     }
     // const webAPIs = asProtocol ?
@@ -142,7 +155,8 @@ const setupPreloadAPIs = ( store ) =>
         //but we need store.
         store.dispatch( remoteCallActions.addRemoteCall(
             {
-                id: callId
+                id: callId,
+                name: 'initializeApp'
             }
         ) );
 

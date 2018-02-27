@@ -20,8 +20,6 @@ class LibLoader {
   constructor() {
     this[_mods] = [authenticator];
     this[_libPath] = CONSTANTS.LIB_PATH.SAFE_AUTH[os.platform()];
-
-    logger.info('>>>>>>>>>>>>>>>>>>>>>>>>', this[_libPath])
   }
 
   load() {

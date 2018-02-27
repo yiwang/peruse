@@ -448,7 +448,7 @@ export default class Tab extends Component
                     style={ { height: '100%', display: 'flex', flex: '1 1' } }
                     preload={ injectPath }
                     partition='persist:safe-tab'
-                    nodeIntegration={ false }
+                    // nodeIntegration={ false }
                     src={ this.props.url }
                     ref={ ( c ) =>
                     {

@@ -1,5 +1,5 @@
 // following @pfrazee's beaker pattern again here.
-import setupPreloadAPIs, { setupPreloadedSafeAPIs } from './setupPreloadAPIs';;
+import setupPreloadAPIs, { setupPreloadedSafeAPIs } from './setupPreloadAPIs';
 
 import { configureStore } from 'store/configureStore';
 // import { init } from  'extensions/safe/init-safe-background-processes';
