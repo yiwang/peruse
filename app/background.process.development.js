@@ -65,6 +65,7 @@ const init = async ( store ) =>
 init();
 
 let cachedRemoteCallArray = [];
+let pendingCallIds = {};
 
 const manageAuthAPICalls = async (store) =>
 {
@@ -104,29 +105,45 @@ const manageAuthAPICalls = async (store) =>
         //DO THE THINGS IN THIS PROCESS
         remoteCalls.forEach( async ( theCall ) =>
         {
-            console.log( 'calllllllll',theCall)
-            if( !theCall.done && !theCall.error && !theCall.inProgress )
+            // console.log( 'calllllllll',theCall)
+            if( !theCall.inProgress && !pendingCallIds[ theCall.id ] )
             {
-                console.log('WE GOT A CALL', theCall);
-                // we should have actual auth reducer...
-                // though that doesnt help w/o changing app...
-                store.dispatch( remoteCallActions.updateRemoteCall({ ...theCall, inProgress: true }) );
-                const theArgs = theCall.args;
+                const thePendingCallPosition = pendingCallIds.length;
 
-                try
+                //hack to prevent multi store triggering.
+                //not needed for auth via redux.
+                pendingCallIds[theCall.id] = 'pending';
+                console.log('WE GOT A CALL', theCall, !theCall.done , !theCall.inProgress, !theCall.done && !theCall.inProgress);
+
+                if( theAPI[ theCall.name ] )
                 {
-                    console.log('calllinnggggg', theAPI[ theCall.name ], `with the args`, theArgs)
-                    //call the API.
-                    let argsForCalling = theArgs || [];
-                    let response = theAPI[ theCall.name ]( ...argsForCalling );
-                    console.log('DONE===============', response);
-                    store.dispatch( remoteCallActions.updateRemoteCall({ ...theCall, inProgress: false, done: true, response }) );
+                    // we should have actual auth reducer...
+                    // though that doesnt help w/o changing app...
+                    store.dispatch( remoteCallActions.updateRemoteCall({ ...theCall, inProgress: true }) );
+                    const theArgs = theCall.args;
+
+                    try
+                    {
+                        console.log('calllinnggggg', theAPI[ theCall.name ], `with the args`, theArgs)
+                        //call the API.
+                        let argsForCalling = theArgs || [];
+                        let response = theAPI[ theCall.name ]( ...argsForCalling );
+                        console.log('DONE===============', response);
+                        store.dispatch( remoteCallActions.updateRemoteCall({ ...theCall, done: true, response }) );
+
+                        // this is kinda racy
+                        delete pendingCallIds[ theCall.id ];
+                    }
+                    catch( e )
+                    {
+                        //TODO: haandle the error properly.
+                        store.dispatch( remoteCallActions.updateRemoteCall({ ...theCall, error: e.message}) );
+                        console.log('ERRORRRRR===============', e)
+                    }
+
                 }
-                catch( e )
-                {
-                    //TODO: haandle the error properly.
-                    store.dispatch( remoteCallActions.updateRemoteCall({ ...theCall, inProgress: false, error: e.message }) );
-                    console.log('ERRORRRRR===============', e)
+                else{
+                    console.log( theCall.name, ' does not exist')
                 }
             }
         })
