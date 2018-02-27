@@ -5,6 +5,11 @@ import { configureStore } from 'store/configureStore';
 // import { init } from  'extensions/safe/init-safe-background-processes';
 // TODO This handling needs to be imported via extension apis more seemlessly
 import handlePeruseStoreChanges from './peruseSafeApp';
+import * as remoteCallActions from 'actions/remoteCall_actions';
+
+// TODO: Dont use client when the same. Offer up original where worded differently
+// aim to deprecate client file.
+import * as theAPI from 'extensions/safe/auth-api/authFuncs';
 
 import { isRunningProduction, SAFE } from 'appConstants';
 // import ipc from './ffi/ipc';
@@ -21,7 +26,7 @@ const store = configureStore( initialState, loadMiddlewarePackages );
 
 const init = async ( store ) =>
 {
-    logger.info( 'Init of bg process.' );
+    console.log( 'Init of bg process.' );
     // ipc();
     //
     // setupWebApis happening via store listeners now... thats it.
@@ -45,9 +50,9 @@ const init = async ( store ) =>
     }
     catch ( e )
     {
-        logger.info( 'Problems initing SAFE extension' );
-        logger.info( e.message );
-        logger.info( e );
+        console.log( 'Problems initing SAFE extension' );
+        console.log( e.message );
+        console.log( e );
     }
 
     // TODO: Reenable this.
@@ -59,8 +64,81 @@ const init = async ( store ) =>
 
 init();
 
+let cachedRemoteCallArray = [];
+
+const manageAuthAPICalls = async (store) =>
+{
+    console.log('managing calls', theAPI)
+    const state = store.getState();
+    const remoteCalls = state.remoteCalls;
+
+    // const callbackForListeners = ipcRenderer.send()
+
+    console.log( ':::::::::::::::::::::::::ssss::::::::::::', theAPI );
+    // handling the listener setupss....
+    // authAPI.setNetworkListener( ( stuff ) =>
+    // {
+    //     console.log('network listener happening', stuff )
+    //     // authenticator.setListener(CONSTANTS.LISTENER_TYPES.NW_STATE_CHANGE, cb);
+    // })
+    //
+    // authAPI.setAppListUpdateListener( ( stuff ) =>
+    // {
+    //
+    //     console.log('network listener happening', stuff )
+    //     // authenticator.setListener(CONSTANTS.LISTENER_TYPES.APP_LIST_UPDATE, cb);
+    // })
+
+
+    if( cachedRemoteCallArray !== remoteCalls )
+    {
+
+        // console.log('NOT THE SAMEEEE', remoteCalls )
+        cachedRemoteCallArray = remoteCalls;
+
+        if( !remoteCalls.length )
+        {
+            return
+        }
+
+        //DO THE THINGS IN THIS PROCESS
+        remoteCalls.forEach( async ( theCall ) =>
+        {
+            console.log( 'calllllllll',theCall)
+            if( !theCall.done && !theCall.error && !theCall.inProgress )
+            {
+                console.log('WE GOT A CALL', theCall);
+                // we should have actual auth reducer...
+                // though that doesnt help w/o changing app...
+                store.dispatch( remoteCallActions.updateRemoteCall({ ...theCall, inProgress: true }) );
+                const theArgs = theCall.args;
+
+                try
+                {
+                    console.log('calllinnggggg', authAPI.methods, theCall.name, `with the args`, theArgs)
+                    //call the API.
+                    // let response = await authAPI[ c.name ]( ...theArgs );
+                    // console.log('DONE===============', response);
+                    // store.dispatch( remoteCallActions.updateRemoteCall({ ...c, inProgress: false, response }) );
+                }
+                catch( e )
+                {
+                    //TODO: haandle the error properly.
+                    store.dispatch( remoteCallActions.updateRemoteCall({ ...theCall, inProgress: false, error: e.message }) );
+                    console.log('ERRORRRRR===============', e)
+                }
+            }
+        })
+        // if completed? remove... ? if updated with 'done', remove?
+    }
+}
+
+
+
 store.subscribe( async () =>
 {
+    console.log('store subbbed', theAPI)
+    manageAuthAPICalls( store );
     handlePeruseStoreChanges( store );
 } );
 

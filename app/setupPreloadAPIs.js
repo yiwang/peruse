@@ -2,11 +2,13 @@
     // import { ipcRenderer } from 'electron';
 // import rpc from 'pauls-electron-rpc';
 import pkg from 'appPackage';
-import logger from 'logger';
+// import logger from 'logger';
 import * as remoteCallActions from 'actions/remoteCall_actions';
 // import { safeAuthApi } from 'extensions/safe/auth-api'
 import safe from '@maidsafe/safe-node-app';
 import { PROTOCOLS } from 'appConstants';
+
+import {LISTENER_TYPES} from 'extensions/safe/auth-constants';
 // import
 import { manifest as authManifest } from 'extensions/safe/auth-api/manifest'
 
@@ -26,12 +28,12 @@ export const setupPreloadedSafeAuthAPIs = ( store ) =>
     // webFrame.registerURLSchemeAsSecure('safe');
     window[ pkg.name ] = { version: VERSION };
 
-    logger.info('SETTING UP PRELOADED SAFEEFEFESSSSS')
+    console.log('SETTING UP PRELOADED SAFEEFEFESSSSS')
     if( window.location.protocol === PROTOCOLS.SAFE_AUTH )
     {
-        logger.info('auth api setup=================', authManifest)
+        console.log('auth api setup=================', authManifest)
         // we need the auth apis.
-        // logger.info( safeAuthApi.manifest );
+        // console.log( safeAuthApi.manifest );
 
     }
     window.safeAuthenticator = {};
@@ -39,19 +41,41 @@ export const setupPreloadedSafeAuthAPIs = ( store ) =>
     window.safeAppGroupId = safeAppGroupId;
 
     authManifest.forEach( (func) => {
-        logger.info('making funccc');
+        console.log('making funccc');
         window.safeAuthenticator[func] = createRemoteCall( func, store );
     });
 
+    // overwrite those that need to set listeners for auth web app
+    // export const setNetworkListener = (cb) =>
+    //   authenticator.setListener(CONSTANTS.LISTENER_TYPES.NW_STATE_CHANGE, cb);
+    //
+    // export const setAppListUpdateListener = (cb) =>
+    //   authenticator.setListener(CONSTANTS.LISTENER_TYPES.APP_LIST_UPDATE, cb);
+
+    // Auth App Hack.
+    window.safeAuthenticator.setNetworkListener = ( cb ) =>
+    {
+        console.log('ipcRenderer callback happening cis it was received.')
+
+        return true;
+        // ipcRenderer.on( LISTENER_TYPES.NW_STATE_CHANGE, cb );
+    }
+
+    // BUTTTTT we need to the webview ID to send...
+
+    window.safeAuthenticator.setNetworkListener = ( cb ) =>
+    {
+        console.log('ipcRenderer callback happening cis it was received.')
+        return true;
+        // ipcRenderer.on( LISTENER_TYPES.APP_LIST_UPDATE, cb );
+    }
 }
 
 const setupPreloadAPIs = ( store ) =>
 {
-    logger.info('setting up preloads');
+    console.log('setting up preloads');
 
     const listeners = [];
-
-    window.testAPI = createRemoteCall( 'boom', store );
 }
 
 
@@ -61,10 +85,10 @@ const createRemoteCall = ( functionName, store ) =>
     {
         throw new Error( 'Remote calls must have a functionName to call.')
     }
-    logger.info('creating remote calllll', functionName)
+    console.log('creating remote calllll', functionName)
     const remoteCall = ( ...args ) =>  new Promise( ( resolve, reject ) =>
     {
-        logger.info('doing remote calllll', functionName)
+        console.log('doing remote calllll', functionName)
         const callId = Math.random().toString( 36 );
 
         //but we need store.
@@ -87,14 +111,14 @@ const addListenerForCall = ( store, callId, resolve, reject ) =>
     {
         const state = store.getState();
         const calls = state.remoteCalls;
-        console.log('store channngeedddd', calls );
+        // console.log('store channngeedddd', calls );
 
         let call = calls.find( c => c.id === callId );
 
         if( call.done )
         {
             console.log('GOT SOME DATAAA', call.replyArgs)
-            logger.info('GOT SOME DATAAA', call.replyArgs)
+            console.log('GOT SOME DATAAA', call.replyArgs)
             listener = null;
 
             resolve( calls[0].replyArgs )

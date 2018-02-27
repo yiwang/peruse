@@ -1,5 +1,8 @@
 const initialState = {
     bookmarks : [{ url: 'safe-auth://home/#/login' }],
+    authenticator     : {
+
+    },
     remoteCalls     : [
     ],
     notifications : [

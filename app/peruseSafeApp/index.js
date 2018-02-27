@@ -6,7 +6,7 @@ import { initializeApp } from '@maidsafe/safe-node-app';
 import { APP_INFO, CONFIG, SAFE, PROTOCOLS } from 'appConstants';
 import * as peruseAppActions from 'actions/peruse_actions';
 import * as notificationActions from 'actions/notification_actions';
-import * as remoteCallActions from 'actions/remoteCall_actions';
+// import * as remoteCallActions from 'actions/remoteCall_actions';
 import logger from 'logger';
 
 const authingStates = [
@@ -28,8 +28,6 @@ const handlePeruseStoreChanges = ( store ) =>
     manageSaveStateActions( store );
     manageReadStateActions( store );
     manageAuthorisationActions( store );
-
-    manageCalls( store );
 }
 
 
@@ -39,31 +37,6 @@ let cachedRemoteCallArray = [];
 let callingArray = [];
 
 
-
-const manageCalls = (store) =>
-{
-    logger.info('managing calls')
-    const state = store.getState();
-    const remoteCalls = state.remoteCalls;
-
-    if( cachedRemoteCallArray !== remoteCalls )
-    {
-
-        logger.info('NOT THE SAMEEEE', remoteCalls )
-        cachedRemoteCallArray = remoteCalls;
-
-        //DO THE THINGS IN THIS PROCESS
-        remoteCalls.forEach( c =>
-        {
-            logger.info('WE GOT A CALL', c);
-            if( !c.replyArgs )
-            {
-                store.dispatch( remoteCallActions.updateRemoteCall({ ...c, replyArgs: ['boom'], done: true }) );
-            }
-        })
-        // if completed? remove... ? if updated with 'done', remove?
-    }
-}
 
 const requestPeruseAppAuthentication = async () =>
 {
