@@ -121,14 +121,21 @@ const addListenerForCall = ( store, callId, resolve, reject ) =>
             return;
         }
 
-        if( theCall.done )
+        if( theCall.done && resolve )
         {
-            console.log('GOT SOME DATAAA', theCall.response)
-            listener = null;
-            // let callbackArgs = theCall.response;
+            console.log('GOT SOME DATAAA', theCall )
+            // listener = null;
+            //unsubscirbes!
+            listener();
+            let callbackArgs = theCall.response;
+
+            if( !Array.isArray( theCall.response ) )
+            {
+                callbackArgs = [ theCall.response ];
+            }
             //
-            // console.log('callbackArgssssss', callbackArgs)
-            // resolve( ...callbackArgs );
+            console.log('callbackArgssssss', callbackArgs)
+            resolve( ...callbackArgs );
 
             store.dispatch( remoteCallActions.removeRemoteCall(
                 theCall

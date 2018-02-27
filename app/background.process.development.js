@@ -103,6 +103,9 @@ const manageAuthAPICalls = async (store) =>
         }
 
         //DO THE THINGS IN THIS PROCESS
+        //DO
+        // TODO: This needs to subscribe individual lsirteners and
+        // then can unsub themm instead of popylating another object to check against
         remoteCalls.forEach( async ( theCall ) =>
         {
             // console.log( 'calllllllll',theCall)
@@ -132,7 +135,7 @@ const manageAuthAPICalls = async (store) =>
                         store.dispatch( remoteCallActions.updateRemoteCall({ ...theCall, done: true, response }) );
 
                         // this is kinda racy
-                        delete pendingCallIds[ theCall.id ];
+                        // delete pendingCallIds[ theCall.id ];
                     }
                     catch( e )
                     {
