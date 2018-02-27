@@ -95,7 +95,8 @@ const createRemoteCall = ( functionName, store ) =>
         store.dispatch( remoteCallActions.addRemoteCall(
             {
                 id: callId,
-                name: functionName
+                name: functionName,
+                args
             }
         ) );
 
@@ -115,13 +116,25 @@ const addListenerForCall = ( store, callId, resolve, reject ) =>
 
         let call = calls.find( c => c.id === callId );
 
+        if( !call )
+        {
+            return;
+        }
+
         if( call.done )
         {
-            console.log('GOT SOME DATAAA', call.replyArgs)
-            console.log('GOT SOME DATAAA', call.replyArgs)
+            console.log('GOT SOME DATAAA', call.response)
             listener = null;
+            let callbackArgs = call.response;
 
-            resolve( calls[0].replyArgs )
+            console.log('callbackArgssssss', callbackArgs)
+            resolve( ...callbackArgs );
+
+            store.dispatch( remoteCallActions.removeRemoteCall(
+                {
+                    id: callId
+                }
+            ) );
         }
         else if( call.error )
         {
