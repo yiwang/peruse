@@ -5,6 +5,7 @@ import { configureStore } from 'store/configureStore';
 // import { init } from  'extensions/safe/init-safe-background-processes';
 // TODO This handling needs to be imported via extension apis more seemlessly
 import handlePeruseStoreChanges from './peruseSafeApp';
+import * as authActions from 'actions/authenticator_actions';
 import * as remoteCallActions from 'actions/remoteCall_actions';
 
 // TODO: Dont use client when the same. Offer up original where worded differently
@@ -60,6 +61,13 @@ const init = async ( store ) =>
     // {
     //     handleMainStoreChanges( store );
     // } );
+
+
+    // Lets check the auth lib status:
+    let authLibStatus = theAPI.getLibStatus();
+    logger.verbose('Authenticator lib status: ', authLibStatus)
+    store.dispatch( authActions.setAuthLibStatus( authLibStatus ))
+
 };
 
 init();
