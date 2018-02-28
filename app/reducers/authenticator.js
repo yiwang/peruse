@@ -4,7 +4,7 @@ import initialAppState from './initialAppState';
 
 import { TYPES } from 'actions/authenticator_actions';
 
-const initialState = initialAppState.ui;
+const initialState = initialAppState.authenticator;
 
 export default function ui( state: array = initialState, action )
 {
@@ -16,14 +16,14 @@ export default function ui( state: array = initialState, action )
         {
             return { ...state, addressBarIsSelected : true };
         }
-        case TYPES.DESELECT_ADDRESS_BAR :
-        {
-            return { ...state, addressBarIsSelected : false };
-        }
-        case TYPES.BLUR_ADDRESS_BAR :
-        {
-            return { ...state, addressBarIsSelected : false };
-        }
+        // case TYPES.DESELECT_ADDRESS_BAR :
+        // {
+        //     return { ...state, addressBarIsSelected : false };
+        // }
+        // case TYPES.BLUR_ADDRESS_BAR :
+        // {
+        //     return { ...state, addressBarIsSelected : false };
+        // }
 
         default:
             return state;

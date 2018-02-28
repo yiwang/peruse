@@ -100,7 +100,6 @@
 
 	var networkStateListenerCb = function networkStateListenerCb (err, state) {
 	  registerNetworkStateListener(networkStateListenerCb);
-      console.log('NetState in Auth', state)
 	  switch (state) {
 	    case _constants2.default.NETWORK_STATUS.CONNECTING:
 	      {
@@ -131,12 +130,8 @@
 	  registerAppListUpdateListener(appListUpdateListenerCb);
 	  return store.dispatch((0, _app.setAppList)(apps));
 	};
-    //inital disconnected state
-    networkStateListenerCb(null, -1);
-    window.safeAuthenticator.getNetworkState().then( response =>
-    {
-        networkStateListenerCb(null, response.state);
-    })
+
+    networkStateListenerCb(null, window.safeAuthenticator.getNetworkState().state);
 	appListUpdateListenerCb(null, []);
 
 	// check Reauthorise state

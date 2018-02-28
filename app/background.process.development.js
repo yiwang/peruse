@@ -123,7 +123,7 @@ const manageAuthAPICalls = async (store) =>
                         theAPI[theCall.name]( ( ...args ) =>
                         {
                             console.log('network listener happening', theCall.name, ...args );
-                            store.dispatch( remoteCallActions.updateRemoteCall({ ...theCall, response: args }) );
+                            store.dispatch( remoteCallActions.updateRemoteCall({ ...theCall, done: true, response: args }) );
 
                             // authenticator.setListener(CONSTANTS.LISTENER_TYPES.NW_STATE_CHANGE, cb);
                         }) ;

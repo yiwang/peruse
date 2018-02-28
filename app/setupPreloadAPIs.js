@@ -53,10 +53,39 @@ export const setupPreloadedSafeAuthAPIs = ( store ) =>
     // export const setAppListUpdateListener = (cb) =>
     //   authenticator.setListener(CONSTANTS.LISTENER_TYPES.APP_LIST_UPDATE, cb);
 
-    // Auth App Hack.
+
+    window.safeAuthenticator.getNetworkState = ( ) =>
+    {
+        const state = store.getState();
+        console.log('getting the network state!', state.authenticator.networkState)
+        return { state: state.authenticator.networkState };
+    }
+
+    window.safeAuthenticator.getAuthenticatorHandle = ( ) =>
+    {
+        const state = store.getState();
+        return state.authenticator.authenticatorHandle;
+    }
+
+    window.safeAuthenticator.getLibStatus = ( ) =>
+    {
+        const state = store.getState();
+        return state.authenticator.libStatus;
+    }
+
+    window.safeAuthenticator.setReAuthoriseState = ( ) =>
+    {
+        // TODO: Reauth action
+        // const state = store.getState();
+        // return state.authenticator.authenticatorHandle;
+        return;
+    }
+
+
+    // Add custom and continual listeners.
     window.safeAuthenticator.setNetworkListener = ( cb ) =>
     {
-        console.log( 'adding custom lstenere callback happening cis it was received.' );
+        console.log( 'adding custom lstenere callback.' );
 
         // return true;
         // window.ipc.on( LISTENER_TYPES.NW_STATE_CHANGE, cb );
@@ -83,8 +112,7 @@ export const setupPreloadedSafeAuthAPIs = ( store ) =>
             {
                 id         : callId,
                 name       : 'setNetworkListener',
-                isListener : true,
-                listenEvent: LISTENER_TYPES.APP_LIST_UPDATE.key
+                isListener : true
             }
         ) );
 
@@ -156,15 +184,10 @@ const addListenerForCall = ( store, callId, resolve, reject ) =>
         if ( theCall.done && resolve )
         {
             cachedCall = theCall;
-            console.log( 'THE CALL IS RESOLVED', theCall.name, theCall.response );
+            console.log( theCall.name, 'IS RESOLVED', theCall.response );
             // stopListening = null;
             // unsubscirbes!
 
-            if( !theCall.isListener )
-            {
-                //redux, triggers unregistering the stopListening
-                stopListening();
-            }
 
             let callbackArgs = theCall.response;
 
@@ -173,12 +196,19 @@ const addListenerForCall = ( store, callId, resolve, reject ) =>
                 callbackArgs = [theCall.response];
             }
             //
-            // console.log( 'callbackArgssssss', callbackArgs );
-            resolve( ...callbackArgs );
+            // if( !theCall.isListener )
+            // {
+                //redux, triggers unregistering the stopListening
+                resolve( ...callbackArgs );
+                store.dispatch( remoteCallActions.removeRemoteCall(
+                    theCall
+                ) );
+            // }
 
-            store.dispatch( remoteCallActions.removeRemoteCall(
-                theCall
-            ) );
+            // if( )
+            stopListening();
+            // console.log( 'callbackArgssssss', callbackArgs );
+
         }
         else if ( theCall.error && reject )
         {

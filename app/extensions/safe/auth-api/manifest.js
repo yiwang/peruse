@@ -1,11 +1,11 @@
 
 export const manifest = [
-  'setNetworkListener',
-  'setAppListUpdateListener',
-  'getNetworkState',
-  'getAuthenticatorHandle',
-  'setReAuthoriseState',
-  'getLibStatus',
+  // 'setNetworkListener',
+  // 'setAppListUpdateListener',
+  // 'getNetworkState',
+  // 'getAuthenticatorHandle',
+  // 'setReAuthoriseState',
+  // 'getLibStatus',
   'logout',
   'login',
   'createAccount',
