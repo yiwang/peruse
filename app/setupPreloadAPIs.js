@@ -180,9 +180,9 @@ const addListenerForCall = ( store, callId, resolve, reject ) =>
                 theCall
             ) );
         }
-        else if ( theCall.error )
+        else if ( theCall.error && reject )
         {
-            reject( e );
+            reject( theCall.error );
         }
         // handlePeruseStoreChanges( store );
     } );

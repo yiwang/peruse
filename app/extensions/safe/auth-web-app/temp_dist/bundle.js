@@ -98,12 +98,10 @@
 	  }
 	};
 
-	var networkStateListenerCb = async function networkStateListenerCb (err, state) {
+	var networkStateListenerCb = function networkStateListenerCb (err, state) {
 	  registerNetworkStateListener(networkStateListenerCb);
-
-      let endState = await state;
-      console.log('STATE WE SEE', endState)
-	  switch (endState) {
+      console.log('NetState in Auth', state)
+	  switch (state) {
 	    case _constants2.default.NETWORK_STATUS.CONNECTING:
 	      {
 	        return store.dispatch((0, _network_state.setNetworkConnecting)());
@@ -133,8 +131,12 @@
 	  registerAppListUpdateListener(appListUpdateListenerCb);
 	  return store.dispatch((0, _app.setAppList)(apps));
 	};
-
-	networkStateListenerCb(null, window.safeAuthenticator.getNetworkState().state);
+    //inital disconnected state
+    networkStateListenerCb(null, -1);
+    window.safeAuthenticator.getNetworkState().then( response =>
+    {
+        networkStateListenerCb(null, response.state);
+    })
 	appListUpdateListenerCb(null, []);
 
 	// check Reauthorise state
