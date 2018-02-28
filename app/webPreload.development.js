@@ -1,6 +1,6 @@
 // following @pfrazee's beaker pattern again here.
 import setupPreloadAPIs, { setupPreloadedSafeAuthAPIs } from './setupPreloadAPIs';
-
+import {ipcRenderer} from 'electron';
 import { configureStore } from 'store/configureStore';
 // import { init } from  'extensions/safe/init-safe-background-processes';
 // TODO This handling needs to be imported via extension apis more seemlessly

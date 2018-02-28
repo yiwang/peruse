@@ -98,9 +98,12 @@
 	  }
 	};
 
-	var networkStateListenerCb = function networkStateListenerCb(err, state) {
+	var networkStateListenerCb = async function networkStateListenerCb (err, state) {
 	  registerNetworkStateListener(networkStateListenerCb);
-	  switch (state) {
+
+      let endState = await state;
+      console.log('STATE WE SEE', endState)
+	  switch (endState) {
 	    case _constants2.default.NETWORK_STATUS.CONNECTING:
 	      {
 	        return store.dispatch((0, _network_state.setNetworkConnecting)());
@@ -736,7 +739,7 @@
 	 * This source code is licensed under the MIT license found in the
 	 * LICENSE file in the root directory of this source tree.
 	 *
-	 * 
+	 *
 	 */
 	'use strict';
 
@@ -945,7 +948,7 @@
 	 * This source code is licensed under the MIT license found in the
 	 * LICENSE file in the root directory of this source tree.
 	 *
-	 * 
+	 *
 	 */
 
 	function makeEmptyFunction(arg) {
@@ -984,7 +987,7 @@
 	 * This source code is licensed under the MIT license found in the
 	 * LICENSE file in the root directory of this source tree.
 	 *
-	 * 
+	 *
 	 */
 
 	'use strict';
@@ -1356,7 +1359,7 @@
 	 * This source code is licensed under the MIT license found in the
 	 * LICENSE file in the root directory of this source tree.
 	 *
-	 * 
+	 *
 	 */
 
 	'use strict';
@@ -1815,7 +1818,7 @@
 	 * This source code is licensed under the MIT license found in the
 	 * LICENSE file in the root directory of this source tree.
 	 *
-	 * 
+	 *
 	 */
 
 	'use strict';
@@ -1846,7 +1849,7 @@
 	 * This source code is licensed under the MIT license found in the
 	 * LICENSE file in the root directory of this source tree.
 	 *
-	 * 
+	 *
 	 */
 
 	'use strict';
@@ -2047,7 +2050,7 @@
 	 * This source code is licensed under the MIT license found in the
 	 * LICENSE file in the root directory of this source tree.
 	 *
-	 * 
+	 *
 	 */
 
 	'use strict';
@@ -2090,7 +2093,7 @@
 	 * This source code is licensed under the MIT license found in the
 	 * LICENSE file in the root directory of this source tree.
 	 *
-	 * 
+	 *
 	 */
 
 	'use strict';
@@ -2581,7 +2584,7 @@
 	 * This source code is licensed under the MIT license found in the
 	 * LICENSE file in the root directory of this source tree.
 	 *
-	 * 
+	 *
 	 */
 
 	'use strict';
@@ -3053,7 +3056,7 @@
 	 * This source code is licensed under the MIT license found in the
 	 * LICENSE file in the root directory of this source tree.
 	 *
-	 * 
+	 *
 	 */
 
 	'use strict';
@@ -3081,7 +3084,7 @@
 	 * This source code is licensed under the MIT license found in the
 	 * LICENSE file in the root directory of this source tree.
 	 *
-	 * 
+	 *
 	 */
 
 	'use strict';
@@ -5059,7 +5062,7 @@
 	 * This source code is licensed under the MIT license found in the
 	 * LICENSE file in the root directory of this source tree.
 	 *
-	 * 
+	 *
 	 */
 	'use strict';
 
@@ -6296,7 +6299,7 @@
 	 * This source code is licensed under the MIT license found in the
 	 * LICENSE file in the root directory of this source tree.
 	 *
-	 * 
+	 *
 	 */
 
 	'use strict';
@@ -6781,7 +6784,7 @@
 	 * This source code is licensed under the MIT license found in the
 	 * LICENSE file in the root directory of this source tree.
 	 *
-	 * 
+	 *
 	 */
 
 	'use strict';
@@ -6862,7 +6865,7 @@
 	 * This source code is licensed under the MIT license found in the
 	 * LICENSE file in the root directory of this source tree.
 	 *
-	 * 
+	 *
 	 */
 
 	'use strict';
@@ -6923,7 +6926,7 @@
 	 * This source code is licensed under the MIT license found in the
 	 * LICENSE file in the root directory of this source tree.
 	 *
-	 * 
+	 *
 	 */
 
 	'use strict';
@@ -7091,7 +7094,7 @@
 	 * This source code is licensed under the MIT license found in the
 	 * LICENSE file in the root directory of this source tree.
 	 *
-	 * 
+	 *
 	 */
 
 	'use strict';
@@ -8160,7 +8163,7 @@
 	 * This source code is licensed under the MIT license found in the
 	 * LICENSE file in the root directory of this source tree.
 	 *
-	 * 
+	 *
 	 */
 
 	'use strict';
@@ -8282,7 +8285,7 @@
 	 * This source code is licensed under the MIT license found in the
 	 * LICENSE file in the root directory of this source tree.
 	 *
-	 * 
+	 *
 	 */
 
 	'use strict';
@@ -8475,7 +8478,7 @@
 	 * This source code is licensed under the MIT license found in the
 	 * LICENSE file in the root directory of this source tree.
 	 *
-	 * 
+	 *
 	 */
 
 	'use strict';
@@ -8566,7 +8569,7 @@
 	 * This source code is licensed under the MIT license found in the
 	 * LICENSE file in the root directory of this source tree.
 	 *
-	 * 
+	 *
 	 */
 
 	'use strict';
@@ -8662,7 +8665,7 @@
 	 * This source code is licensed under the MIT license found in the
 	 * LICENSE file in the root directory of this source tree.
 	 *
-	 * 
+	 *
 	 */
 
 	'use strict';
@@ -8689,7 +8692,7 @@
 	 * This source code is licensed under the MIT license found in the
 	 * LICENSE file in the root directory of this source tree.
 	 *
-	 * 
+	 *
 	 */
 
 	'use strict';
@@ -9053,7 +9056,7 @@
 	 * This source code is licensed under the MIT license found in the
 	 * LICENSE file in the root directory of this source tree.
 	 *
-	 * 
+	 *
 	 */
 
 	'use strict';
@@ -9093,7 +9096,7 @@
 	 * This source code is licensed under the MIT license found in the
 	 * LICENSE file in the root directory of this source tree.
 	 *
-	 * 
+	 *
 	 */
 
 	'use strict';
@@ -9190,7 +9193,7 @@
 	 * This source code is licensed under the MIT license found in the
 	 * LICENSE file in the root directory of this source tree.
 	 *
-	 * 
+	 *
 	 */
 
 	'use strict';
@@ -9645,7 +9648,7 @@
 	 * This source code is licensed under the MIT license found in the
 	 * LICENSE file in the root directory of this source tree.
 	 *
-	 * 
+	 *
 	 */
 
 	'use strict';
@@ -13064,7 +13067,7 @@
 	 * This source code is licensed under the MIT license found in the
 	 * LICENSE file in the root directory of this source tree.
 	 *
-	 * 
+	 *
 	 * @typechecks static-only
 	 */
 
@@ -14256,7 +14259,7 @@
 	 * This source code is licensed under the MIT license found in the
 	 * LICENSE file in the root directory of this source tree.
 	 *
-	 * 
+	 *
 	 */
 
 	'use strict';
@@ -15215,7 +15218,7 @@
 	 * This source code is licensed under the MIT license found in the
 	 * LICENSE file in the root directory of this source tree.
 	 *
-	 * 
+	 *
 	 */
 
 	'use strict';
@@ -16501,7 +16504,7 @@
 	 * This source code is licensed under the MIT license found in the
 	 * LICENSE file in the root directory of this source tree.
 	 *
-	 * 
+	 *
 	 */
 
 	'use strict';
@@ -16634,7 +16637,7 @@
 	 * This source code is licensed under the MIT license found in the
 	 * LICENSE file in the root directory of this source tree.
 	 *
-	 * 
+	 *
 	 */
 
 	'use strict';
@@ -16663,7 +16666,7 @@
 	 * LICENSE file in the root directory of this source tree.
 	 *
 	 * @typechecks
-	 * 
+	 *
 	 */
 
 	/*eslint-disable no-self-compare */
@@ -16879,7 +16882,7 @@
 	 * This source code is licensed under the MIT license found in the
 	 * LICENSE file in the root directory of this source tree.
 	 *
-	 * 
+	 *
 	 */
 
 	'use strict';
@@ -16902,7 +16905,7 @@
 	 * This source code is licensed under the MIT license found in the
 	 * LICENSE file in the root directory of this source tree.
 	 *
-	 * 
+	 *
 	 */
 
 	'use strict';
@@ -17142,7 +17145,7 @@
 	 * This source code is licensed under the MIT license found in the
 	 * LICENSE file in the root directory of this source tree.
 	 *
-	 * 
+	 *
 	 */
 
 	'use strict';
@@ -17164,7 +17167,7 @@
 	 * This source code is licensed under the MIT license found in the
 	 * LICENSE file in the root directory of this source tree.
 	 *
-	 * 
+	 *
 	 */
 
 	'use strict';
@@ -17207,7 +17210,7 @@
 	 * This source code is licensed under the MIT license found in the
 	 * LICENSE file in the root directory of this source tree.
 	 *
-	 * 
+	 *
 	 */
 
 	'use strict';
@@ -17379,7 +17382,7 @@
 	 * This source code is licensed under the MIT license found in the
 	 * LICENSE file in the root directory of this source tree.
 	 *
-	 * 
+	 *
 	 */
 
 	'use strict';
@@ -19480,7 +19483,7 @@
 	 * This source code is licensed under the MIT license found in the
 	 * LICENSE file in the root directory of this source tree.
 	 *
-	 * 
+	 *
 	 */
 
 	var isTextNode = __webpack_require__(156);
@@ -20109,7 +20112,7 @@
 	 * This source code is licensed under the MIT license found in the
 	 * LICENSE file in the root directory of this source tree.
 	 *
-	 * 
+	 *
 	 */
 
 	'use strict';
@@ -21538,7 +21541,7 @@
 	 * This source code is licensed under the MIT license found in the
 	 * LICENSE file in the root directory of this source tree.
 	 *
-	 * 
+	 *
 	 */
 
 	'use strict';
@@ -61066,8 +61069,8 @@
 	  };
 
 	  /**
-	   * Return true whether the enumItem parameter passed in is an EnumItem object and 
-	   * has been included as constant of this Enum   
+	   * Return true whether the enumItem parameter passed in is an EnumItem object and
+	   * has been included as constant of this Enum
 	   * @param  {EnumItem} enumItem
 	   */
 

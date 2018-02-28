@@ -77,18 +77,7 @@ const manageAuthAPICalls = async (store) =>
 
     // console.log( ':::::::::::::::::::::::::ssss::::::::::::', theAPI );
     // handling the listener setupss....
-    theAPI.setNetworkListener( ( stuff ) =>
-    {
-        console.log('network listener happening', stuff )
-        // authenticator.setListener(CONSTANTS.LISTENER_TYPES.NW_STATE_CHANGE, cb);
-    })
-    //
-    theAPI.setAppListUpdateListener( ( stuff ) =>
-    {
 
-        console.log('network listener happening', stuff )
-        // authenticator.setListener(CONSTANTS.LISTENER_TYPES.APP_LIST_UPDATE, cb);
-    })
 
 
     if( cachedRemoteCallArray !== remoteCalls )
@@ -125,12 +114,36 @@ const manageAuthAPICalls = async (store) =>
                     store.dispatch( remoteCallActions.updateRemoteCall({ ...theCall, inProgress: true }) );
                     const theArgs = theCall.args;
 
+
+                    // IF LISTENER
+                    if( theCall.isListener )
+                    {
+                        console.log('actual listener being added', theAPI[theCall.name])
+                        //register listener with auth
+                        theAPI[theCall.name]( ( ...args ) =>
+                        {
+                            console.log('network listener happening', theCall.name, ...args );
+                            store.dispatch( remoteCallActions.updateRemoteCall({ ...theCall, response: args }) );
+
+                            // authenticator.setListener(CONSTANTS.LISTENER_TYPES.NW_STATE_CHANGE, cb);
+                        }) ;
+
+                        return;
+                        //
+                        // theAPI.setAppListUpdateListener( ( stuff ) =>
+                        // {
+                        //
+                        //     console.log('network listener happening', stuff )
+                        //     // authenticator.setListener(CONSTANTS.LISTENER_TYPES.APP_LIST_UPDATE, cb);
+                        // })
+                    }
+
                     try
                     {
                         console.log('calllinnggggg', theAPI[ theCall.name ], `with the args`, theArgs)
                         //call the API.
                         let argsForCalling = theArgs || [];
-                        let response = theAPI[ theCall.name ]( ...argsForCalling );
+                        let response = await theAPI[ theCall.name ]( ...argsForCalling );
                         console.log('DONE===============', response);
                         store.dispatch( remoteCallActions.updateRemoteCall({ ...theCall, done: true, response }) );
 

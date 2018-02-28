@@ -1,5 +1,5 @@
 // following @pfrazee's beaker pattern again here.
-    // import { ipcRenderer } from 'electron';
+import { ipcRenderer } from 'electron';
 // import rpc from 'pauls-electron-rpc';
 import pkg from 'appPackage';
 // import logger from 'logger';
@@ -8,42 +8,43 @@ import * as remoteCallActions from 'actions/remoteCall_actions';
 import safe from '@maidsafe/safe-node-app';
 import { PROTOCOLS } from 'appConstants';
 
-import {LISTENER_TYPES} from 'extensions/safe/auth-constants';
+import { LISTENER_TYPES } from 'extensions/safe/auth-constants';
 // import
-import { manifest as authManifest } from 'extensions/safe/auth-api/manifest'
+import { manifest as authManifest } from 'extensions/safe/auth-api/manifest';
 
 const VERSION = pkg.version;
 
-window.eval = global.eval = () => {
-  throw new Error(`Sorry, this app does not support window.eval().`)
-}
+window.eval = global.eval = () =>
+{
+    throw new Error( 'Sorry, this app does not support window.eval().' );
+};
 
 export const setupPreloadedSafeAuthAPIs = ( store ) =>
 {
     window.safeApp = { ...safe, fromAuthURI: null };
-
+    window.ipc = ipcRenderer;
 
     // safe = null;
     // mark the safe protocol as 'secure' to enable all DOM APIs
     // webFrame.registerURLSchemeAsSecure('safe');
-    window[ pkg.name ] = { version: VERSION };
+    window[pkg.name] = { version: VERSION };
 
-    console.log('SETTING UP PRELOADED SAFEEFEFESSSSS')
-    if( window.location.protocol === PROTOCOLS.SAFE_AUTH )
+    console.log( 'SETTING UP PRELOADED SAFEEFEFESSSSS' );
+    if ( window.location.protocol === PROTOCOLS.SAFE_AUTH )
     {
-        console.log('auth api setup=================', authManifest)
+        // console.log( 'auth api setup=================', authManifest );
         // we need the auth apis.
         // console.log( safeAuthApi.manifest );
-
     }
     window.safeAuthenticator = {};
     const safeAppGroupId = ( Math.random() * 1000 | 0 ) + Date.now();
     window.safeAppGroupId = safeAppGroupId;
 
-    authManifest.forEach( (func) => {
-        console.log('making funccc');
+    authManifest.forEach( ( func ) =>
+    {
+        // console.log( 'making funccc' );
         window.safeAuthenticator[func] = createRemoteCall( func, store );
-    });
+    } );
 
     // overwrite those that need to set listeners for auth web app
     // export const setNetworkListener = (cb) =>
@@ -55,47 +56,76 @@ export const setupPreloadedSafeAuthAPIs = ( store ) =>
     // Auth App Hack.
     window.safeAuthenticator.setNetworkListener = ( cb ) =>
     {
-        console.log('ipcRenderer callback happening cis it was received.')
+        console.log( 'adding custom lstenere callback happening cis it was received.' );
 
-        return true;
-        // ipcRenderer.on( LISTENER_TYPES.NW_STATE_CHANGE, cb );
-    }
+        // return true;
+        // window.ipc.on( LISTENER_TYPES.NW_STATE_CHANGE, cb );
+        const callId = Math.random().toString( 36 );
+        store.dispatch( remoteCallActions.addRemoteCall(
+            {
+                id         : callId,
+                name       : 'setNetworkListener',
+                isListener : true
+            }
+        ) );
+
+        addListenerForCall( store, callId, cb );
+    };
+
+    window.safeAuthenticator.setAppListUpdateListener = ( cb ) =>
+    {
+        console.log( 'adding setAppListUpdateListener lstener callback happening is it was received.' );
+
+        // return true;
+        // window.ipc.on( LISTENER_TYPES.NW_STATE_CHANGE, cb );
+        const callId = Math.random().toString( 36 );
+        store.dispatch( remoteCallActions.addRemoteCall(
+            {
+                id         : callId,
+                name       : 'setNetworkListener',
+                isListener : true,
+                listenEvent: LISTENER_TYPES.APP_LIST_UPDATE.key
+            }
+        ) );
+
+        addListenerForCall( store, callId, cb );
+    };
 
     // BUTTTTT we need to the webview ID to send...
 
-    window.safeAuthenticator.setNetworkListener = ( cb ) =>
-    {
-        console.log('ipcRenderer callback happening cis it was received.')
-        return true;
-        // ipcRenderer.on( LISTENER_TYPES.APP_LIST_UPDATE, cb );
-    }
-}
+    // window.safeAuthenticator.setNetworkListener = ( cb ) =>
+    // {
+    //     console.log( 'ipcRenderer callback happening cis it was received.' );
+    //     return true;
+    //     // ipcRenderer.on( LISTENER_TYPES.APP_LIST_UPDATE, cb );
+    // };
+};
 
 const setupPreloadAPIs = ( store ) =>
 {
-    console.log('setting up preloads');
+    console.log( 'setting up preloads' );
 
     const listeners = [];
-}
+};
 
 
 const createRemoteCall = ( functionName, store ) =>
 {
-    if( !functionName )
+    if ( !functionName )
     {
-        throw new Error( 'Remote calls must have a functionName to call.')
+        throw new Error( 'Remote calls must have a functionName to call.' );
     }
-    console.log('creating remote calllll', functionName)
-    const remoteCall = ( ...args ) =>  new Promise( ( resolve, reject ) =>
+    // console.log( 'creating remote calllll', functionName );
+    const remoteCall = ( ...args ) => new Promise( ( resolve, reject ) =>
     {
-        console.log('doing remote calllll', functionName)
+        console.log( 'doing remote calllll', functionName );
         const callId = Math.random().toString( 36 );
 
-        //but we need store.
+        // but we need store.
         store.dispatch( remoteCallActions.addRemoteCall(
             {
-                id: callId,
-                name: functionName,
+                id   : callId,
+                name : functionName,
                 args
             }
         ) );
@@ -104,49 +134,58 @@ const createRemoteCall = ( functionName, store ) =>
     } );
 
     return remoteCall;
-}
+};
 
 const addListenerForCall = ( store, callId, resolve, reject ) =>
 {
-    let listener = store.subscribe( async () =>
+    let cachedCall = {};
+
+    const stopListening = store.subscribe( async () =>
     {
         const state = store.getState();
         const calls = state.remoteCalls;
         // console.log('store channngeedddd', calls );
 
-        let theCall = calls.find( c => c.id === callId );
+        const theCall = calls.find( c => c.id === callId );
 
-        if( !theCall )
+        if ( !theCall || theCall === cachedCall )
         {
             return;
         }
 
-        if( theCall.done && resolve )
+        if ( theCall.done && resolve )
         {
-            console.log('GOT SOME DATAAA', theCall )
-            // listener = null;
-            //unsubscirbes!
-            listener();
+            cachedCall = theCall;
+            console.log( 'GOT SOME DATAAA', theCall );
+            // stopListening = null;
+            // unsubscirbes!
+
+            if( !theCall.isListener )
+            {
+                //redux, triggers unregistering the stopListening
+                stopListening();
+            }
+
             let callbackArgs = theCall.response;
 
-            if( !Array.isArray( theCall.response ) )
+            if ( !Array.isArray( theCall.response ) )
             {
-                callbackArgs = [ theCall.response ];
+                callbackArgs = [theCall.response];
             }
             //
-            console.log('callbackArgssssss', callbackArgs)
+            console.log( 'callbackArgssssss', callbackArgs );
             resolve( ...callbackArgs );
 
             store.dispatch( remoteCallActions.removeRemoteCall(
                 theCall
             ) );
         }
-        else if( theCall.error )
+        else if ( theCall.error )
         {
-            reject( e )
+            reject( e );
         }
         // handlePeruseStoreChanges( store );
-    }  );
-}
+    } );
+};
 
 export default setupPreloadAPIs;
