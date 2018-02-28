@@ -156,7 +156,7 @@ const addListenerForCall = ( store, callId, resolve, reject ) =>
         if ( theCall.done && resolve )
         {
             cachedCall = theCall;
-            console.log( 'GOT SOME DATAAA', theCall );
+            console.log( 'THE CALL IS RESOLVED', theCall.name, theCall.response );
             // stopListening = null;
             // unsubscirbes!
 
@@ -173,7 +173,7 @@ const addListenerForCall = ( store, callId, resolve, reject ) =>
                 callbackArgs = [theCall.response];
             }
             //
-            console.log( 'callbackArgssssss', callbackArgs );
+            // console.log( 'callbackArgssssss', callbackArgs );
             resolve( ...callbackArgs );
 
             store.dispatch( remoteCallActions.removeRemoteCall(
