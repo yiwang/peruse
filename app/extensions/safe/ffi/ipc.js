@@ -2,7 +2,7 @@
 import { ipcMain, shell } from 'electron';
 import i18n from 'i18n';
 
-import { authFromInteralResponse, getBrowserAuthReqUri } from '../network';
+import { authFromInteralResponse, getBrowserAuthReqUri } from '../network/authenticator-comms';
 import * as peruseAppActions from 'actions/peruse_actions';
 
 import authenticator from './authenticator';

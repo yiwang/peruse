@@ -15,8 +15,9 @@ import logger from 'logger';
 import { isRunningUnpacked, isRunningPackaged, PROTOCOLS } from 'appConstants';
 import { parse as parseURL } from 'url';
 import pkg from 'appPackage';
-import * as peruseAppActions from 'actions/peruse_actions';
 
+
+import * as peruseAppActions from 'actions/peruse_actions';
 import setupBackground from './setupBackground';
 
 import openWindow from './openWindow';
@@ -26,18 +27,12 @@ import { configureStore } from './store/configureStore';
 // TODO: Deprecate this in favour of redux actions
 // import handleCommands from './commandHandling';
 
-//TODO: Enable webAPIs
-// import { setupWebAPIs } from './webAPIs';
-
 // TODO: This should be handled in an extensible fashion
-import { handleSafeAuthUrlReception } from './extensions/safe/network';
-import { addTab, closeActiveTab } from 'actions/tabs_actions';
+// import { handleSafeAuthUrlReception } from './extensions/safe/network';
+import { addTab } from 'actions/tabs_actions';
 import { setupServerVars, startServer } from './server';
 
-// import setupAuthHandling from 'extensions/safe/authIPCHandling';
-
-
-import { createSafeInfoWindow, createTray } from './setupTray';
+// import { createSafeInfoWindow, createTray } from './setupTray';
 
 const initialState = {};
 let bgProcessWindow = null;
@@ -73,7 +68,8 @@ const handleSafeUrls = ( url ) =>
     // When we have more... What then? Are we able to retrieve the url schemes registered for a given app?
     if ( parsedUrl.protocol === 'safe-auth:' )
     {
-        handleSafeAuthUrlReception( url );
+        //TODO: This needs to be sent to BG process.
+        // handleSafeAuthUrlReception( url );
     }
     if ( parsedUrl.protocol === 'safe:' )
     {

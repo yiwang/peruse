@@ -1,10 +1,12 @@
-import { initializeApp, fromAuthURI } from '@maidsafe/safe-node-app';
+// import { initializeApp, fromAuthURI } from '@maidsafe/safe-node-app';
 import { APP_INFO, CONFIG, SAFE, PROTOCOLS } from 'appConstants';
 import logger from 'logger';
 import { parse as parseURL } from 'url';
 import { addNotification, clearNotification } from 'actions/notification_actions';
 import { callIPC, setIPCStore } from '../ffi/ipc';
 // import ipc from '../ffi/ipc';
+
+//  TODO: Move to constants.
 import AUTH_CONSTANTS from '../auth-constants';
 
 const queue = [];
@@ -12,6 +14,41 @@ let peruseAppObj;
 let store;
 let browserAuthReqUri;
 
+
+export const authFromQueue = async () =>
+{
+    if ( queue.length )
+    {
+        authFromInteralResponse( queue[0] ); // hack for testing
+    }
+};
+
+
+export const authFromInteralResponse = async ( res, isAuthenticated ) =>
+{
+    //TODO: This logic shuld be in BG process for peruse.
+    try
+    {
+        // for webFetch app only
+        peruseAppObj = await peruseAppObj.auth.loginFromURI( res );
+    }
+    catch ( err )
+    {
+        if ( store )
+        {
+            let message = err.message;
+
+            if( err.message.startsWith( 'Unexpected (probably a logic') )
+            {
+                message = `Check your current IP address matches your registered address at invite.maidsafe.net`;
+            }
+            store.dispatch( addNotification( { text: message, onDismiss: clearNotification } ) );
+        }
+
+        logger.error( err.message || err );
+        logger.error( '>>>>>>>>>>>>>' );
+    }
+};
 
 
 

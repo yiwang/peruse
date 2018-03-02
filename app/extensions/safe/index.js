@@ -1,13 +1,8 @@
 import logger from 'logger';
-import { isRunningProduction, SAFE } from 'appConstants';
 import setupRoutes from './server-routes';
 import registerSafeProtocol from './protocols/safe';
-
 import registerSafeAuthProtocol from './protocols/safe-auth';
-
 import blockNonSAFERequests from './blockNonSafeReqs';
-
-
 
 const init = async ( store ) =>
 {

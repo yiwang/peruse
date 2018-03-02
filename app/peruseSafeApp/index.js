@@ -16,7 +16,7 @@ const authingStates = [
     SAFE.APP_STATUS.AUTHORISATION_DENIED
 ];
 
-let appObj;
+let peruseAppObj;
 
 
 /**
@@ -42,14 +42,14 @@ const requestPeruseAppAuthentication = async () =>
 {
     try
     {
-        appObj = await initializeApp( APP_INFO.info, null, { libPath: CONFIG.LIB_PATH } );
+        peruseAppObj = await initializeApp( APP_INFO.info, null, { libPath: CONFIG.LIB_PATH } );
 
-        const authReq = await appObj.auth.genAuthUri( APP_INFO.permissions, APP_INFO.opts );
+        const authReq = await peruseAppObj.auth.genAuthUri( APP_INFO.permissions, APP_INFO.opts );
 
         global.browserAuthReqUri = authReq.uri;
-        await appObj.auth.openUri( authReq.uri );
+        await peruseAppObj.auth.openUri( authReq.uri );
 
-        return appObj;
+        return peruseAppObj;
     }
     catch ( err )
     {
@@ -59,8 +59,8 @@ const requestPeruseAppAuthentication = async () =>
 };
 
 // TODO: Watch out, this is duped in network.js for funcs over there.
-export const getAppObj = () =>
-    appObj;
+export const getPeruseAppObj = () =>
+    peruseAppObj;
 
 const authFromStoreResponse = async ( res, store ) =>
 {
@@ -82,7 +82,7 @@ const authFromStoreResponse = async ( res, store ) =>
     //TODO: This logic shuld be in BG process for peruse.
     try
     {
-        appObj = await appObj.auth.loginFromURI( res );
+        peruseAppObj = await peruseAppObj.auth.loginFromURI( res );
 
         if ( store )
         {

@@ -1,6 +1,6 @@
 import logger from 'logger';
 
-// import { getAppObj } from '../network';
+// import { getPeruseAppObj } from '../network';
 
 const safeRoute = {
     method  : 'GET',
@@ -12,7 +12,7 @@ const safeRoute = {
             const link = `safe://${request.params.link}`;
 
             // TODO: Move to bg process. OR: How do we get app?
-            // const app = getAppObj() || {};
+            // const app = getPeruseAppObj() || {};
             const app =  {};
             const headers = request.headers;
             let isRangeReq = false;

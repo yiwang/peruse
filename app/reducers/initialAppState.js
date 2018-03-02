@@ -11,7 +11,8 @@ const initialState = {
         loading: false,
         networkState: 0, // Connecting
         authenticatorHandle: '',
-        libStatus: true
+        libStatus: true,
+        authenticationQueue: []
         // createAccNavPos: 1,
         // showPopupWindow: false,
         // libErrPopup: false

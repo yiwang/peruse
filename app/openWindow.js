@@ -87,7 +87,8 @@ const openWindow = ( store ) =>
         mainWindow.show();
         mainWindow.focus();
 
-        authFromQueue();
+        // TODO: Make this queue authenticastor action.
+        // authFromQueue();
 
         const webContentsId = mainWindow.webContents.id;
         // global.browserWindowId = webContentsId;
