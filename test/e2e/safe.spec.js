@@ -1,3 +1,5 @@
+
+import opn from 'opn';
 import { parse as urlParse } from 'url';
 import {removeTrailingSlash} from 'utils/urlHelpers';
 import {
@@ -81,4 +83,20 @@ describe( 'SAFE network webFetch operation', async () =>
 
     	expect(data.body.toString()).toBe(content );
     } );
+
+
+    it( 'is registered to handle safe:// requests:', async( ) =>
+    {
+        opn('safe://blabla');
+
+        setClientToMainBrowserWindow(app);
+        const { client } = app;
+        await client.pause(1500)
+
+        await client.waitForExist( BROWSER_UI.ADDRESS_INPUT );
+        const address = await client.getValue( BROWSER_UI.ADDRESS_INPUT );
+
+        expect( address ).toBe('safe://blabla');
+    })
+
 } );

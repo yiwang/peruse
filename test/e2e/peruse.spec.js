@@ -6,12 +6,11 @@ import {
     setClientToMainBrowserWindow,
     setClientToBackgroundProcessWindow
 } from './lib/browser-driver';
-import { BROWSER_UI, AUTH_UI } from './lib/constants';
+import { BROWSER_UI, AUTH_UI, WAIT_FOR_EXIST_TIMEOUT } from './lib/constants';
 import setupSpectronApp from './lib/setupSpectronApp';
 
 jest.unmock( 'electron' );
-
-jasmine.DEFAULT_TIMEOUT_INTERVAL = 25000;
+jasmine.DEFAULT_TIMEOUT_INTERVAL = 65000;
 
 // TODO:
 // - Check for protocols/APIs? Via js injection?
@@ -31,6 +30,7 @@ describe( 'main window', () =>
     beforeAll( async () =>
     {
         await app.start();
+        // console.log('starting', app)
         await app.client.waitUntilWindowLoaded();
     } );
 
@@ -43,7 +43,13 @@ describe( 'main window', () =>
     } );
 
     test( 'window loaded', async () =>
-        await app.browserWindow.isVisible() );
+    {
+        console.log('waiting win loaded')
+        let loaded = await app.browserWindow.isVisible()
+        console.log('waiting win loaded DONE')
+        return loaded;
+    }
+     );
     // it( 'DEBUG LOGGING (amend test): should haven\'t any logs in console of main window', async () =>
     // {
     //     const { client } = app;
@@ -84,13 +90,14 @@ describe( 'main window', () =>
         const { client } = app;
         const tabIndex = await newTab( app );
         await navigateTo( app, 'example.com' );
-        await client.waitForExist( BROWSER_UI.ADDRESS_INPUT );
+        await client.waitForExist( BROWSER_UI.ADDRESS_INPUT , WAIT_FOR_EXIST_TIMEOUT);
 
 
+        // await client.pause( 1500 );
         const address = await client.getValue( BROWSER_UI.ADDRESS_INPUT );
 
         await client.windowByIndex( tabIndex );
-        await client.pause( 500 );
+        // await client.pause( 1500 );
 
         const clientUrl = await client.getUrl();
 
@@ -111,7 +118,7 @@ describe( 'main window', () =>
         await navigateTo( app, 'example.com' );
         await navigateTo( app, 'google.com' );
 
-        await client.waitForExist( BROWSER_UI.BACKWARDS );
+        await client.waitForExist( BROWSER_UI.BACKWARDS, WAIT_FOR_EXIST_TIMEOUT );
         await client.click( BROWSER_UI.BACKWARDS );
         await client.windowByIndex( tabIndex );
         const clientUrl = removeTrailingSlash( await client.getUrl() );
@@ -128,7 +135,7 @@ describe( 'main window', () =>
         await navigateTo( app, 'example.com' );
         await navigateTo( app, 'example.org' );
 
-        await client.waitForExist( BROWSER_UI.BACKWARDS );
+        await client.waitForExist( BROWSER_UI.BACKWARDS, WAIT_FOR_EXIST_TIMEOUT );
         await client.click( BROWSER_UI.BACKWARDS );
         await client.windowByIndex( tabIndex );
 
@@ -139,7 +146,7 @@ describe( 'main window', () =>
 
         await setClientToMainBrowserWindow( app );
         await client.pause( 500 );
-        await client.waitForExist( BROWSER_UI.FORWARDS );
+        await client.waitForExist( BROWSER_UI.FORWARDS, WAIT_FOR_EXIST_TIMEOUT );
 
         // TODO: why is iting needing two clicks?
         await client.click( BROWSER_UI.FORWARDS );
@@ -159,7 +166,7 @@ describe( 'main window', () =>
         const tabIndex = await newTab( app );
 
         await navigateTo( app, 'bbc.com' );
-        await client.waitForExist( BROWSER_UI.CLOSE_TAB );
+        await client.waitForExist( BROWSER_UI.CLOSE_TAB, WAIT_FOR_EXIST_TIMEOUT );
 
         await client.click( `${BROWSER_UI.ACTIVE_TAB} ${BROWSER_UI.CLOSE_TAB}` );
         await client.pause( 500 );
@@ -174,7 +181,7 @@ describe( 'main window', () =>
     {
         const { client } = app;
         await setClientToMainBrowserWindow( app );
-        await client.waitForExist( BROWSER_UI.ADDRESS_INPUT );
+        await client.waitForExist( BROWSER_UI.ADDRESS_INPUT, WAIT_FOR_EXIST_TIMEOUT );
         await client.pause( 500 );
         await client.click( BROWSER_UI.ADDRESS_INPUT );
 
@@ -192,11 +199,14 @@ describe( 'main window', () =>
         await setClientToMainBrowserWindow( app );
         await client.pause( 500 );
 
-        await client.waitForExist( BROWSER_UI.SPECTRON_AREA );
-        await client.pause( 500 );
+        console.log('trying to trigger save state.')
+        await client.waitForExist( BROWSER_UI.SPECTRON_AREA, WAIT_FOR_EXIST_TIMEOUT );
+        console.log('spectron area exists.')
+        await client.pause( 4500 );
         await client.click( BROWSER_UI.SPECTRON_AREA__SPOOF_SAVE );
-        await client.pause( 2500 );
-        await client.waitForExist( BROWSER_UI.NOTIFIER_TEXT );
+        console.log('spectron area was clicked.')
+        await client.pause( 4500 );
+        await client.waitForExist( BROWSER_UI.NOTIFIER_TEXT, WAIT_FOR_EXIST_TIMEOUT );
         const note = await client.getText( BROWSER_UI.NOTIFIER_TEXT );
 
         expect( note.endsWith( 'Unauthorised' ) ).toBeTruthy();

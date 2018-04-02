@@ -52,7 +52,7 @@ ipcMain.on( 'errorInWindow', ( event, data ) =>
     logger.error( data );
 } );
 
-const mainWindow = null;
+let mainWindow = null;
 
 const handleSafeUrls = ( url ) =>
 {
@@ -160,7 +160,7 @@ app.on( 'ready', async () =>
         app.exit();
     }
 
-    openWindow( store );
+    mainWindow = openWindow( store );
 
     // TODO: Reenable for adding Safe Network popup
     // createTray();

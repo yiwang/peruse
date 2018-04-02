@@ -1,5 +1,5 @@
 import path from 'path';
-import { app } from 'electron';
+import { remote } from 'electron';
 import pkg from 'appPackage';
 
 const allPassedArgs = process.argv;
@@ -36,7 +36,12 @@ export const inMainProcess = !inRendererProcess;
 // Set global for tab preload.
 // Adds app folder for asar packaging (space before app is important).
 const preloadLocation = isRunningUnpacked ? '' : '../';
-global.preloadFile = `file://${ __dirname }/webPreload.js`;
+
+if( inMainProcess )
+{
+    global.preloadFile = `file://${ __dirname }/webPreload.js`;
+    global.appDir = __dirname;
+}
 
 let safeNodeAppPathModifier = '';
 
@@ -44,7 +49,6 @@ if ( isRunningPackaged )
 {
     safeNodeAppPathModifier = '../app.asar.unpacked/';
 }
-
 
 
 export const I18N_CONFIG = {
@@ -83,14 +87,14 @@ if( isRunningUnpacked )
 }
 
 // HACK: Prevent jest dying due to no electron globals
-const execPath = ( ) =>
+const safeNodeAppPath = ( ) =>
 {
-    if ( env === 'test' || inRendererProcess )
+    if ( env === 'test' || inMainProcess )
     {
         return '';
     }
 
-    return isRunningUnpacked ? [process.execPath, app.getAppPath()] : [app.getPath( 'exe' )];
+    return isRunningUnpacked ? [remote.process.execPath, remote.getGlobal('appDir')] : [remote.app.getPath( 'exe' )];
 };
 
 const appInfo = {
@@ -99,7 +103,7 @@ const appInfo = {
         scope          : null,
         name           : pkg.productName,
         vendor         : pkg.author.name,
-        customExecPath : execPath()
+        customExecPath : safeNodeAppPath()
     },
     opts : {
         own_container : true,
