@@ -6,6 +6,7 @@ import { env,
     isRunningDebug,
     isRunningProduction,
     isRunningMock,
+    isRunningNodeEnvTest,
     isRunningSpectronTest,
     inMainProcess,
     inRendererProcess

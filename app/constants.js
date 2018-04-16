@@ -17,6 +17,10 @@ if( allPassedArgs.includes('--debug') )
     hasDebugFlag = true;
 }
 
+// these env vars are only available to the spectron test runner process.
+export const isRunningSpectronTestProcess = process.env.SPECTRON_TEST;
+export const isRunningSpectronTestingPackagedApp = process.env.TEST_PACKAGED_APP;
+
 export const isRunningUnpacked = !!process.execPath.match( /[\\/]electron/ );
 export const isRunningPackaged = !isRunningUnpacked;
 export const env = hasMockFlag ? 'development' : process.env.NODE_ENV || 'production';
@@ -28,7 +32,7 @@ export const isHot = process.env.HOT || 0;
 // only to be used for inital store setting in main process. Not guaranteed correct for renderers.
 export const isRunningMock = /^dev/.test( env );
 export const isRunningProduction = !isRunningMock;
-export const isRunningTest = /^test/.test( env );
+export const isRunningNodeEnvTest = /^test/.test( env );
 export const isRunningSpectronTest = !!process.env.IS_SPECTRON;
 export const isRunningDebug = hasDebugFlag || isRunningSpectronTest ;
 export const inRendererProcess = typeof window !== 'undefined';
@@ -46,7 +50,10 @@ const preloadLocation = isRunningUnpacked ? '' : '../';
  */
 const safeNodeLibPath = ( ) =>
 {
-    if ( inMainProcess || env === 'test' )
+    // if( isRunningSpectronTestProcess ) return;
+
+    // !remote for spectron prod mode.
+    if ( inMainProcess || isRunningSpectronTestProcess || isRunningNodeEnvTest )
     {
         return path.resolve( __dirname, safeNodeAppPathModifier, 'node_modules/@maidsafe/safe-node-app/src/native' );
     }
@@ -56,7 +63,7 @@ const safeNodeLibPath = ( ) =>
 
 let safeNodeAppPathModifier = '';
 
-if ( isRunningPackaged && !isRunningTest )
+if ( isRunningPackaged && !isRunningNodeEnvTest )
 {
     safeNodeAppPathModifier = '../app.asar.unpacked/';
 }
@@ -109,7 +116,8 @@ if( inMainProcess )
 // HACK: Prevent jest dying due to no electron globals
 const safeNodeAppPath = ( ) =>
 {
-    if ( env === 'test' || inMainProcess )
+    // !remote for spectron prod test
+    if ( isRunningSpectronTestProcess || isRunningNodeEnvTest || inMainProcess )
     {
         return '';
     }

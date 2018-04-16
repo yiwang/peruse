@@ -17,7 +17,7 @@ switch ( arg )
     case ( 'e2e' ) :
     {
         pattern = `test${s}e2e${s}.+\\.spec\\.js`;
-        argsArray.push( `--bail`);
+        // argsArray.push('--bail');
         break;
     }
     case ( 'exts' ) :

@@ -9,30 +9,30 @@ import {
 } from './lib/browser-driver';
 import { BROWSER_UI, AUTH_UI, WAIT_FOR_EXIST_TIMEOUT } from './lib/constants';
 import setupSpectronApp from './lib/setupSpectronApp';
-import { isCI, travisOS } from 'appConstants';
+import { isCI, travisOS, isRunningSpectronTestingPackagedApp } from 'appConstants';
 
 jest.unmock( 'electron' );
 jasmine.DEFAULT_TIMEOUT_INTERVAL = 65000;
 
 // TODO:
-// - Check for protocols/APIs? Via js injection?
 // - Check for inspect element availability
 // - Check history
 // - Check bookmarks
+// -  Check that it loads images from page.
+// - Check that http images are _not_ loaded.
 // - Check clicking a link in a page, updates title and webview etc.
 // NOTE: Getting errors in e2e for seemingly no reason? Check you havent enabled devtools in menu.js, this makes spectron
 // have a bad time.
-// TODO: Check that it loads a page from network/mock. Check that it loads images from said page.
-// Check that http images are _not_ loaded.
+
 
 describe( 'main window', () =>
 {
-    const app = setupSpectronApp();
-
+    const app = setupSpectronApp( [], isRunningSpectronTestingPackagedApp );
+    console.log('app',app)
     beforeAll( async () =>
     {
         await app.start();
-        // console.log('starting', app)
+        console.log('starting', app)
         await app.client.waitUntilWindowLoaded();
     } );
 
@@ -50,6 +50,8 @@ describe( 'main window', () =>
         await delay(3500)
         return loaded;
     });
+
+
     // it( 'LOGGING (amend test): should haven\'t any logs in console of main window', async () =>
     // {
     //     const { client } = app;

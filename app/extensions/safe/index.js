@@ -4,11 +4,11 @@ import registerSafeProtocol from './protocols/safe';
 import registerSafeAuthProtocol from './protocols/safe-auth';
 import blockNonSAFERequests from './blockNonSafeReqs';
 import { setIsMock } from 'actions/peruse_actions';
-import { isRunningMock, isRunningSpectronTest } from 'appConstants';
+import { isRunningMock, isRunningSpectronTest, CONFIG } from 'appConstants';
 
 const init = async ( store ) =>
 {
-    logger.info( 'Registering SAFE Network Protocols' );
+    logger.info( 'Registering SAFE Network Protocols' , CONFIG);
     try
     {
         registerSafeProtocol( store );

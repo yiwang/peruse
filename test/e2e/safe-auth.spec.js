@@ -1,7 +1,6 @@
 import { parse as urlParse } from 'url';
 import opn from 'opn';
-
-import { isCI, travisOS } from 'appConstants';
+import { isCI, travisOS, isRunningSpectronTestingPackagedApp } from 'appConstants';
 import { removeTrailingSlash } from 'utils/urlHelpers';
 import {
     delay,
@@ -10,16 +9,16 @@ import {
     setClientToMainBrowserWindow,
     setClientToBackgroundProcessWindow
 } from './lib/browser-driver';
-import { BROWSER_UI, AUTH_UI } from './lib/constants';
+import { BROWSER_UI, AUTH_UI, WAIT_FOR_EXIST_TIMEOUT, SAFE_AUTH_REQ } from './lib/constants';
 import setupSpectronApp from './lib/setupSpectronApp';
-import { WAIT_FOR_EXIST_TIMEOUT, SAFE_AUTH_REQ } from './lib/constants';
+
 jest.unmock( 'electron' );
 
 jasmine.DEFAULT_TIMEOUT_INTERVAL = 25000;
 
 describe( 'safe authenticator protocol', () =>
 {
-    const app = setupSpectronApp();
+    const app = setupSpectronApp( [], isRunningSpectronTestingPackagedApp );
 
     beforeAll( async () =>
     {
