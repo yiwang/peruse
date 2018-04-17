@@ -26,17 +26,12 @@ if ( isRunningNodeEnvTest )
 {
     libLocaleModifier = '';
 }
-
-// if (  isRunningSpectronTestProcess )
-// {
-//     libLocaleModifier = '';
-// }
-
-if ( isRunningPackaged )
+else if ( isRunningPackaged )
 {
     libLocaleModifier = '../extensions/safe/';
 }
 
+console.log('AUTH THING HERE',libLocaleModifier)
 
 
 export default {
