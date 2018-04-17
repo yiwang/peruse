@@ -51,6 +51,8 @@ script:
 - sleep 15
 - if [[ "$NODE_ENV" != "prod" ]]; then yarn run test-e2e;
   fi
+- if [[ "$NODE_ENV" == "prod" ]]; then yarn run test-e2e-prod;
+  fi
 - yarn run package-only
 
 after_success:
