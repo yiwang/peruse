@@ -1,13 +1,14 @@
 import Enum from 'enum';
 import path from 'path';
 import logger from 'logger';
+
 import { isHot,
     isRunningPackaged,
     inRendererProcess,
     isRunningProduction,
     isRunningMock,
     isRunningNodeEnvTest,
-    isRunningSpectronTest
+    isRunningSpectronTestProcess
 } from 'appConstants';
 
 
@@ -16,7 +17,7 @@ let libLocaleModifier = 'extensions/safe/';
 
 let libEnvModifier = 'prod';
 
-if ( isRunningMock || isRunningNodeEnvTest )
+if ( isRunningMock || isRunningNodeEnvTest || isRunningSpectronTestProcess)
 {
     libEnvModifier = 'mock';
 }
@@ -25,7 +26,13 @@ if ( isRunningNodeEnvTest )
 {
     libLocaleModifier = '';
 }
-else if ( isRunningPackaged )
+
+// if (  isRunningSpectronTestProcess )
+// {
+//     libLocaleModifier = '';
+// }
+
+if ( isRunningPackaged )
 {
     libLocaleModifier = '../extensions/safe/';
 }

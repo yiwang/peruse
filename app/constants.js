@@ -18,8 +18,8 @@ if( allPassedArgs.includes('--debug') )
 }
 
 // these env vars should only available to the spectron test runner process. [are they?]
-export const isRunningSpectronTestProcess = process.env.SPECTRON_TEST;
-export const isRunningSpectronTestingPackagedApp = process.env.TEST_PACKAGED_APP;
+export const isRunningSpectronTestProcess = !!process.env.SPECTRON_TEST;
+export const isRunningSpectronTestProcessingPackagedApp = !!process.env.TEST_PACKAGED_APP;
 
 export const isRunningUnpacked = !!process.execPath.match( /[\\/]electron/ );
 export const isRunningPackaged = !isRunningUnpacked;
@@ -33,8 +33,8 @@ export const isHot = process.env.HOT || 0;
 export const isRunningMock = /^dev/.test( env );
 export const isRunningProduction = !isRunningMock;
 export const isRunningNodeEnvTest = /^test/.test( env );
-export const isRunningSpectronTest = !!process.env.IS_SPECTRON;
-export const isRunningDebug = hasDebugFlag || isRunningSpectronTest ;
+// export const isRunningSpectronTestProcess = !!process.env.IS_SPECTRON;
+export const isRunningDebug = hasDebugFlag || isRunningSpectronTestProcess ;
 export const inRendererProcess = typeof window !== 'undefined';
 export const inMainProcess = !inRendererProcess;
 
@@ -62,7 +62,7 @@ const safeNodeLibPath = ( ) =>
 // HACK: Prevent jest dying due to no electron globals
 const safeNodeAppPath = ( ) =>
 {
-    if ( inMainProcess || isRunningSpectronTestProcess || isRunningNodeEnvTest )
+    if ( !remote || !remote.app )
     {
         return '';
     }
