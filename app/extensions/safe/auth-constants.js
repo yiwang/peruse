@@ -6,7 +6,7 @@ import { isHot,
     inRendererProcess,
     isRunningProduction,
     isRunningMock,
-    isRunningTest,
+    isRunningNodeEnvTest,
     isRunningSpectronTest
 } from 'appConstants';
 
@@ -16,12 +16,12 @@ let libLocaleModifier = 'extensions/safe/';
 
 let libEnvModifier = 'prod';
 
-if ( isRunningMock || isRunningTest )
+if ( isRunningMock || isRunningNodeEnvTest )
 {
     libEnvModifier = 'mock';
 }
 
-if ( isRunningTest )
+if ( isRunningNodeEnvTest )
 {
     libLocaleModifier = '';
 }
